@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Xml", "Gu.Xml\Gu.Xml.csproj", "{E73E3548-105D-4D1A-AA1B-6C32F9935D9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Xml.Tests", "Gu.Xml.Tests\Gu.Xml.Tests.csproj", "{3848E777-B7B3-4B36-8C6C-234AAD50D35F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E73E3548-105D-4D1A-AA1B-6C32F9935D9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E73E3548-105D-4D1A-AA1B-6C32F9935D9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E73E3548-105D-4D1A-AA1B-6C32F9935D9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E73E3548-105D-4D1A-AA1B-6C32F9935D9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3848E777-B7B3-4B36-8C6C-234AAD50D35F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3848E777-B7B3-4B36-8C6C-234AAD50D35F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3848E777-B7B3-4B36-8C6C-234AAD50D35F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3848E777-B7B3-4B36-8C6C-234AAD50D35F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

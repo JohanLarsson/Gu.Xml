@@ -15,6 +15,7 @@ namespace Gu.Xml.Tests.CodeGen
             var toStrings = typeof(XmlConvert).GetMethods(BindingFlags.Public | BindingFlags.Static)
                                                .Where(m => m.Name == "ToString")
                                                .ToArray();
+            Console.WriteLine("{typeof (System.String), x => (string)x},");
             foreach (var methodInfo in toStrings)
             {
                 Console.WriteLine(@"{{typeof ({0}), x => XmlConvert.ToString(({0})x)}},", methodInfo.GetParameters()[0].ParameterType.FullName);
@@ -27,6 +28,7 @@ namespace Gu.Xml.Tests.CodeGen
             var toStrings = typeof(XmlConvert).GetMethods(BindingFlags.Public | BindingFlags.Static)
                                               .Where(m => m.Name.StartsWith("To") && m.Name != "ToString")
                                               .ToArray();
+            Console.WriteLine("{typeof (System.String), x => x},");
             foreach (var methodInfo in toStrings)
             {
                 Console.WriteLine(@"{{typeof ({0}), x => XmlConvert.{1}(x)}},", methodInfo.ReturnType.FullName, methodInfo.Name);

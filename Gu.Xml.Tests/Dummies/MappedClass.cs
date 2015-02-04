@@ -2,18 +2,17 @@
 {
     using System.Xml;
     using System.Xml.Schema;
-    using System.Xml.Serialization;
 
-    public class AttributesClass : IXmlSerializable
+    public class MappedClass : IXmlMapped
     {
         private int _value3;
         private readonly int _value4;
 
-        private AttributesClass()
+        private MappedClass()
         {
         }
 
-        public AttributesClass(bool value1, string value2, int value3, int value4)
+        public MappedClass(bool value1, string value2, int value3, int value4)
         {
             Value1 = value1;
             Value2 = value2;
@@ -21,11 +20,11 @@
             _value4 = value4;
         }
 
-        public static AttributesClass Default
+        public static ElementClass Default
         {
             get
             {
-                return new AttributesClass(true, "2", 3, 4);
+                return new ElementClass(true, "2", 3, 4);
             }
         }
 
@@ -50,18 +49,21 @@
 
         public void ReadXml(XmlReader reader)
         {
-            reader.ReadAttribute(() => Value1);
-            reader.ReadAttribute(() => Value2);
-            reader.ReadAttribute(() => Value3, () => _value3);
-            reader.ReadAttribute(() => Value4, () => _value4);
+            reader.Read(this);
         }
 
         public void WriteXml(XmlWriter writer)
         {
-            writer.WriteAttribute(() => Value1);
-            writer.WriteAttribute(() => Value2);
-            writer.WriteAttribute(() => Value3);
-            writer.WriteAttribute(() => Value4);
+            writer.Write(this);
+        }
+
+        public Gu.Xml.XmlMapping GetMap()
+        {
+            return Gu.Xml.XmlMapping.GetOrCreate(
+                x => x.WithElement(() => Value1)
+                      .WithAttribute(() => Value2)
+                      .WithElement(() => Value3, () => _value3)
+                      .WithAttribute(() => Value4, () => _value4));
         }
     }
 }

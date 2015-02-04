@@ -37,7 +37,6 @@ namespace Gu.Xml.Tests
 
         public void ReadXml(XmlReader reader)
         {
-            //reader.MoveToContent();
             //reader.ReadAttribute(() => Value1);
             //reader.ReadAttribute(() => Value2);
             //reader.ReadAttribute(() => Value3, () => _value3);

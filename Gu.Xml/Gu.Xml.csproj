@@ -40,8 +40,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Field.cs" />
+    <Compile Include="IXmlMapped.cs" />
     <Compile Include="NameOf.cs" />
     <Compile Include="Property.cs" />
+    <Compile Include="TypeExt.cs" />
+    <Compile Include="XmlMapping.cs" />
     <Compile Include="XmlReaderExt.cs" />
     <Compile Include="XmlWriterExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

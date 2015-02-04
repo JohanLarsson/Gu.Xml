@@ -5,11 +5,14 @@ using System.Xml;
 
 namespace Gu.Xml
 {
+    using System.Collections.Concurrent;
     using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     public static class XmlWriterExt
     {
-        private static readonly Dictionary<Type, Func<object, string>> Conversions = new Dictionary<Type, Func<object, string>>
+        private static readonly ConcurrentDictionary<Type, XmlSerializer> Serializers = new ConcurrentDictionary<Type, XmlSerializer>();
+        private static readonly Dictionary<Type, Func<object, string>> ToStrings = new Dictionary<Type, Func<object, string>>
         {
             {typeof (System.String), x => (string)x},
             {typeof (System.Boolean), x => XmlConvert.ToString((System.Boolean) x)},
@@ -48,7 +51,7 @@ namespace Gu.Xml
             {
                 return writer;
             }
-            var func = Conversions[typeof(T)];
+            var func = ToStrings[typeof(T)];
             var s = func(value);
             writer.WriteAttributeString(localName, s);
             return writer;
@@ -75,9 +78,28 @@ namespace Gu.Xml
             {
                 return writer;
             }
-            var func = Conversions[typeof(T)];
-            var s = func(value);
-            writer.WriteElementString(localName, s);
+            Func<object, string> toString;
+            if (ToStrings.TryGetValue(typeof(T), out toString))
+            {
+                var s = toString(value);
+                writer.WriteElementString(localName, s);
+            }
+            else
+            {
+                var serializable = value as IXmlSerializable;
+                if (serializable != null)
+                {
+                    writer.WriteStartElement(localName);
+                    serializable.WriteXml(writer);
+                    writer.WriteEndElement();
+                }
+                else
+                {
+                    throw new NotImplementedException("message");
+                    var serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(localName));
+                    serializer.Serialize(writer, value);
+                }
+            }
             return writer;
         }
 
@@ -86,12 +108,12 @@ namespace Gu.Xml
             var xmlMapping = instance.GetMap();
             foreach (var map in xmlMapping.AttributeMappings)
             {
-                writer.WriteAttribute(map.Name, map.Value);
+                map.Write(writer);
             }
 
             foreach (var map in xmlMapping.ElementMappings)
             {
-                writer.WriteElement(map.Name, map.Value);
+                map.Write(writer);
             }
         }
     }

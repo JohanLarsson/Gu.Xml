@@ -34,55 +34,83 @@ namespace Gu.Xml
             {typeof (System.Guid), x => XmlConvert.ToString((System.Guid) x)},
         };
 
-        public static XmlWriter WriteAttribute<T>(this XmlWriter writer, Expression<Func<T>> property)
+        public static XmlWriter WriteAttribute<T>(this XmlWriter writer, Expression<Func<T>> property, bool verifyReadWrite = false)
         {
-            return writer.WriteAttribute(property.Name(), property);
+            return writer.WriteAttribute(new AttributeMap<T>(property, verifyReadWrite));
         }
 
-        public static XmlWriter WriteAttribute<T>(this XmlWriter writer, string localName, Expression<Func<T>> property)
+        public static XmlWriter WriteAttribute<T>(this XmlWriter writer, AttributeMap<T> map)
         {
-            var value = property.Compile().Invoke();
-            return writer.WriteAttribute(localName, value);
+            map.Write(writer);
+            return writer;
         }
 
         public static XmlWriter WriteAttribute<T>(this XmlWriter writer, string localName, T value)
         {
-            if (value == null && typeof(T).IsNullable())
+            if (value == null && typeof(T).CanBeNull())
             {
                 return writer;
             }
-            var func = ToStrings[typeof(T)];
-            var s = func(value);
+            if (typeof(T) == typeof(string))
+            {
+                writer.WriteAttribute(localName, value, x => (dynamic)x);
+            }
+            else
+            {
+                writer.WriteAttribute(localName, value, x => XmlConvert.ToString((dynamic)x));
+            }
+            return writer;
+        }
+
+        public static XmlWriter WriteAttribute<T>(this XmlWriter writer, string localName, T value, Func<T, string> toString)
+        {
+            if (value == null && typeof(T).CanBeNull())
+            {
+                return writer;
+            }
+            string s = null;
+            try
+            {
+                s = toString(value);
+            }
+            catch (Exception e)
+            {
+
+                throw new SerializationException(string.Format("Failed to convert {0} to {1}", value, typeof(T).FullName), e);
+            }
+
             writer.WriteAttributeString(localName, s);
             return writer;
         }
 
-        public static XmlWriter WriteElement<T>(this XmlWriter writer, Expression<Func<T>> property)
+        public static XmlWriter WriteElement<T>(this XmlWriter writer, Expression<Func<T>> property, bool verifyReadWrite = false)
         {
-            return writer.WriteElement(property.Name(), property);
+            return writer.WriteElement(new ElementMap<T>(property, verifyReadWrite));
         }
 
-        public static XmlWriter WriteElement<T>(this XmlWriter writer, string localName, Expression<Func<T>> property)
+        public static XmlWriter WriteElement<T>(this XmlWriter writer, ElementMap<T> map)
         {
-            if (string.IsNullOrWhiteSpace(localName))
-            {
-                throw new SerializationException("Element name cannot be blank");
-            }
-            var value = property.Compile().Invoke();
-            return writer.WriteElement(localName, value);
+            map.Write(writer);
+            return writer;
         }
 
         public static XmlWriter WriteElement<T>(this XmlWriter writer, string localName, T value)
         {
-            if (value == null && typeof(T).IsNullable())
+            if (value == null && typeof(T).CanBeNull())
             {
                 return writer;
             }
-            Func<object, string> toString;
-            if (ToStrings.TryGetValue(typeof(T), out toString))
+            if (typeof(T) == typeof(string))
             {
-                var s = toString(value);
-                writer.WriteElementString(localName, s);
+                writer.WriteElementString(localName, (dynamic)value);
+                return writer;
+            }
+            Type type = typeof(T).IsNullable() ? typeof(T).NullableInnerType() : typeof(T);
+            Func<object, string> toString;
+            if (ToStrings.TryGetValue(type, out toString))
+            {
+                writer.WriteElementString(localName, XmlConvert.ToString((dynamic)value));
+                return writer;
             }
             else
             {
@@ -92,13 +120,11 @@ namespace Gu.Xml
                     writer.WriteStartElement(localName);
                     serializable.WriteXml(writer);
                     writer.WriteEndElement();
+                    return writer;
                 }
-                else
-                {
-                    throw new NotImplementedException("message");
-                    var serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(localName));
-                    serializer.Serialize(writer, value);
-                }
+                throw new NotImplementedException("message");
+                var serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(localName));
+                serializer.Serialize(writer, value);
             }
             return writer;
         }

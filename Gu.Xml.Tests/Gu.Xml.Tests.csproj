@@ -43,9 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeGen\Conversions.cs" />
-    <Compile Include="CodeGen\ReadElementContentAsGen.cs" />
+    <Compile Include="CodeGen\ReadContentAsGen.cs" />
     <Compile Include="Dummies\AttributesClass.cs" />
     <Compile Include="Dummies\AttributeClassWithMissingSetter.cs" />
+    <Compile Include="Dummies\ClassWithEnumerable.cs" />
+    <Compile Include="Dummies\ClassWithNestedSimpleClass.cs" />
+    <Compile Include="Dummies\ClassWithNestedSimpleIXmlSerializableClass.cs" />
     <Compile Include="Dummies\ClassWithNullable.cs" />
     <Compile Include="Dummies\ElementClass.cs" />
     <Compile Include="Dummies\DummyStruct.cs" />
@@ -53,6 +56,8 @@
     <Compile Include="Dummies\MissingAttribute.cs" />
     <Compile Include="Dummies\MissingElement.cs" />
     <Compile Include="Dummies\MappedClass.cs" />
+    <Compile Include="Dummies\SimpleClass.cs" />
+    <Compile Include="Dummies\SimpleIXmlSerializableClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadXmlTests.cs" />
     <Compile Include="RoundTrips.cs" />

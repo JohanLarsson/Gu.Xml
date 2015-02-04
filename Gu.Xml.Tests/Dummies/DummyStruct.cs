@@ -4,6 +4,8 @@ using System.Xml.Serialization;
 
 namespace Gu.Xml.Tests
 {
+    using System;
+
     public struct DummyStruct : IXmlSerializable
     {
         private int _value3;
@@ -37,6 +39,7 @@ namespace Gu.Xml.Tests
 
         public void ReadXml(XmlReader reader)
         {
+            throw new NotImplementedException("message");
             //reader.ReadAttribute(() => Value1);
             //reader.ReadAttribute(() => Value2);
             //reader.ReadAttribute(() => Value3, () => _value3);
@@ -45,6 +48,8 @@ namespace Gu.Xml.Tests
 
         public void WriteXml(XmlWriter writer)
         {
+            throw new NotImplementedException("message");
+            
             //writer.WriteAttribute(() => Value1);
             //writer.WriteAttribute(() => Value2);
             //writer.WriteAttribute(() => Value3);

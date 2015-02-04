@@ -9,7 +9,7 @@
     {
         public Nullable<int> Value1 { get; set; }
 
-        public string Value2 { get; set; }
+        public Nullable<int> Value2 { get; set; }
 
         public XmlSchema GetSchema()
         {

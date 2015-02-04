@@ -18,6 +18,19 @@ namespace Gu.Xml
             var fieldInfo = expression.Member as FieldInfo;
             return fieldInfo != null;
         }
+
+        public static Action<object, T> Setter<T>(this Expression<Func<T>> propertyOrField)
+        {
+            var expression = (MemberExpression)propertyOrField.Body;
+            var propertyInfo = expression.Member as PropertyInfo;
+            if (propertyInfo != null)
+            {
+                return (o, v) => propertyInfo.SetMethod.Invoke(o, new object[] { v });
+            }
+            var fieldInfo = (FieldInfo)expression.Member;
+            return (o, v) => fieldInfo.SetValue(o, v);
+        }
+
         public static void Set<T>(this Expression<Func<T>> propertyOrField, T value)
         {
             var expression = (MemberExpression)propertyOrField.Body;

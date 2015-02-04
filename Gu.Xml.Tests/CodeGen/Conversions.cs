@@ -23,6 +23,19 @@ namespace Gu.Xml.Tests.CodeGen
         }
 
         [Test]
+        public void ToStringHashSet()
+        {
+            var toStrings = typeof(XmlConvert).GetMethods(BindingFlags.Public | BindingFlags.Static)
+                                               .Where(m => m.Name == "ToString")
+                                               .ToArray();
+            Console.WriteLine("{typeof (System.String), x => (string)x},");
+            foreach (var methodInfo in toStrings)
+            {
+                Console.WriteLine(@"{{typeof ({0}), x => XmlConvert.ToString(({0})x)}},", methodInfo.GetParameters()[0].ParameterType.FullName);
+            }
+        }
+
+        [Test]
         public void ToX()
         {
             var toStrings = typeof(XmlConvert).GetMethods(BindingFlags.Public | BindingFlags.Static)

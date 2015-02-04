@@ -39,12 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeMap.cs" />
+    <Compile Include="ElementMap.cs" />
     <Compile Include="Field.cs" />
+    <Compile Include="IMap.cs" />
     <Compile Include="IXmlMapped.cs" />
+    <Compile Include="Map.cs" />
     <Compile Include="NameOf.cs" />
     <Compile Include="Property.cs" />
     <Compile Include="TypeExt.cs" />
-    <Compile Include="XmlMapping.cs" />
+    <Compile Include="XmlMap.cs" />
     <Compile Include="XmlReaderExt.cs" />
     <Compile Include="XmlWriterExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

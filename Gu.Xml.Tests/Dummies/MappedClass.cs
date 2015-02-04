@@ -57,9 +57,10 @@
             writer.Write(this);
         }
 
-        public Gu.Xml.XmlMapping GetMap()
+        public Gu.Xml.XmlMap GetMap()
         {
-            return Gu.Xml.XmlMapping.GetOrCreate(
+            return Gu.Xml.XmlMap.GetOrCreate(
+                this,
                 x => x.WithElement(() => Value1)
                       .WithAttribute(() => Value2)
                       .WithElement(() => Value3, () => _value3)

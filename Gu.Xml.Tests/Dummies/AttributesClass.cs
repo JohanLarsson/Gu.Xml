@@ -1,9 +1,9 @@
-﻿namespace Gu.Xml.Tests.Dummies
-{
-    using System.Xml;
-    using System.Xml.Schema;
-    using System.Xml.Serialization;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
+namespace Gu.Xml.Tests.Dummies
+{
     public class AttributesClass : IXmlSerializable
     {
         private int _value3;
@@ -19,14 +19,6 @@
             Value2 = value2;
             _value3 = value3;
             _value4 = value4;
-        }
-
-        public static AttributesClass Default
-        {
-            get
-            {
-                return new AttributesClass(true, "2", 3, 4);
-            }
         }
 
         public bool Value1 { get; private set; }
@@ -50,10 +42,12 @@
 
         public void ReadXml(XmlReader reader)
         {
+            reader.MoveToContent();
             reader.ReadAttribute(() => Value1);
             reader.ReadAttribute(() => Value2);
             reader.ReadAttribute(() => Value3, () => _value3);
             reader.ReadAttribute(() => Value4, () => _value4);
+            reader.Read();
         }
 
         public void WriteXml(XmlWriter writer)

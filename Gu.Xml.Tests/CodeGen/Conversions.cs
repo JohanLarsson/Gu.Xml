@@ -26,12 +26,17 @@ namespace Gu.Xml.Tests.CodeGen
         public void ToStringHashSet()
         {
             var toStrings = typeof(XmlConvert).GetMethods(BindingFlags.Public | BindingFlags.Static)
-                                               .Where(m => m.Name == "ToString")
-                                               .ToArray();
-            Console.WriteLine("{typeof (System.String), x => (string)x},");
-            foreach (var methodInfo in toStrings)
+                                              .Where(m => m.Name == "ToString")
+                                              .Select(x=>x.GetParameters()[0].ParameterType)
+                                              .Distinct()
+                                              .ToArray();
+            foreach (var parameterType in toStrings)
             {
-                Console.WriteLine(@"{{typeof ({0}), x => XmlConvert.ToString(({0})x)}},", methodInfo.GetParameters()[0].ParameterType.FullName);
+                Console.WriteLine(@"typeof({0}),", parameterType.FullName);
+                if (parameterType.IsValueType)
+                {
+                    Console.WriteLine(@"typeof(System.Nullable<{0}>),", parameterType.FullName);
+                }
             }
         }
 
@@ -45,6 +50,24 @@ namespace Gu.Xml.Tests.CodeGen
             foreach (var methodInfo in toStrings)
             {
                 Console.WriteLine(@"{{typeof ({0}), x => XmlConvert.{1}(x)}},", methodInfo.ReturnType.FullName, methodInfo.Name);
+            }
+        }
+
+        [Test]
+        public void ToXHashSet()
+        {
+            var toStrings = typeof(XmlConvert).GetMethods(BindingFlags.Public | BindingFlags.Static)
+                                              .Where(m => m.Name.StartsWith("To") && m.Name != "ToString")
+                                              .Select(x => x.GetParameters()[0].ParameterType)
+                                              .Distinct()
+                                              .ToArray();
+            foreach (var parameterType in toStrings)
+            {
+                Console.WriteLine(@"typeof({0}),", parameterType.FullName);
+                if (parameterType.IsValueType)
+                {
+                    Console.WriteLine(@"typeof(System.Nullable<{0}>),", parameterType.FullName);
+                }
             }
         }
     }

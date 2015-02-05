@@ -5,7 +5,7 @@
     using System.Xml.Schema;
     using System.Xml.Serialization;
 
-    public class ClassWithNullable : IXmlSerializable
+    public class WithNullable : IXmlSerializable
     {
         public Nullable<int> Value1 { get; set; }
 
@@ -19,6 +19,7 @@
         public void ReadXml(XmlReader reader)
         {
             reader.ReadAttribute(() => Value1);
+            reader.Read();
             reader.ReadElement(() => Value2);
         }
 

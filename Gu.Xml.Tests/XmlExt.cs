@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
@@ -8,36 +9,56 @@
     {
         public static T Roundtrip<T>(this T item, bool printXmlToConsole = true)
         {
-            var xml = item.ToXml(printXmlToConsole);
-            var roundtrip = xml.To<T>();
-            return roundtrip;
+            var list = new List<T> {item, item};
+            item.ToXml(printXmlToConsole);
+            var listXml = list.ToXml(false);
+            var roundtrip = listXml.To<List<T>>();
+            return roundtrip[0];
         }
 
         public static string ToXml<T>(this T item, bool printXmlToConsole = true)
         {
-            var stringBuilder = new StringBuilder();
-            using (var writer = new StringWriter(stringBuilder))
+            try
             {
-                var serializer = new XmlSerializer(typeof(T));
-                serializer.Serialize(writer, item);
-                var xml = stringBuilder.ToString();
-                if (printXmlToConsole)
+                var stringBuilder = new StringBuilder();
+                using (var writer = new StringWriter(stringBuilder))
                 {
-                    Console.Write(xml);
-                    Console.WriteLine();
-                    Console.WriteLine();
+                    var serializer = new XmlSerializer(typeof(T));
+                    serializer.Serialize(writer, item);
+                    var xml = stringBuilder.ToString();
+                    if (printXmlToConsole)
+                    {
+                        Console.Write(xml);
+                        Console.WriteLine();
+                        Console.WriteLine();
+                    }
+                    return xml;
                 }
-                return xml;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("#################### Failed writing xml ####################");
+                ex.DumpToConsole();
+                throw;
             }
         }
 
         public static T To<T>(this string xml)
         {
-            using (var reader = new StringReader(xml))
+            try
             {
-                var serializer = new XmlSerializer(typeof(T));
-                var deserialize = (T)serializer.Deserialize(reader);
-                return deserialize;
+                using (var reader = new StringReader(xml))
+                {
+                    var serializer = new XmlSerializer(typeof(T));
+                    var deserialize = (T)serializer.Deserialize(reader);
+                    return deserialize;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("#################### Failed reading xml ####################");
+                ex.DumpToConsole();
+                throw;
             }
         }
 

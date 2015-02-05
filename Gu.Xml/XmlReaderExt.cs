@@ -1,50 +1,34 @@
-﻿namespace Gu.Xml
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Serialization;
+
+namespace Gu.Xml
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Runtime.Serialization;
     using System.Xml;
-    using System.Xml.Serialization;
-
     public static partial class XmlReaderExt
     {
-        internal static readonly Dictionary<Type, Func<string, object>> FromStrings =
-            new Dictionary<Type, Func<string, object>>
-                {
-                    { typeof(String), x => x },
-                    { typeof(Boolean), x => XmlConvert.ToBoolean(x) },
-                    { typeof(Char), x => XmlConvert.ToChar(x) },
-                    { typeof(Decimal), x => XmlConvert.ToDecimal(x) },
-                    { typeof(SByte), x => XmlConvert.ToSByte(x) },
-                    { typeof(Int16), x => XmlConvert.ToInt16(x) },
-                    { typeof(Int32), x => XmlConvert.ToInt32(x) },
-                    { typeof(Int64), x => XmlConvert.ToInt64(x) },
-                    { typeof(Byte), x => XmlConvert.ToByte(x) },
-                    { typeof(UInt16), x => XmlConvert.ToUInt16(x) },
-                    { typeof(UInt32), x => XmlConvert.ToUInt32(x) },
-                    { typeof(UInt64), x => XmlConvert.ToUInt64(x) },
-                    { typeof(Single), x => XmlConvert.ToSingle(x) },
-                    { typeof(Double), x => XmlConvert.ToDouble(x) },
-                    { typeof(TimeSpan), x => XmlConvert.ToTimeSpan(x) },
-                    { typeof(DateTime), x => XmlConvert.ToDateTime(x, XmlDateTimeSerializationMode.Unspecified) },
-                    { typeof(DateTimeOffset), x => XmlConvert.ToDateTimeOffset(x) },
-                    { typeof(Guid), x => XmlConvert.ToGuid(x) },
-                };
-
-        internal static readonly Dictionary<Type, Func<XmlReader, object>> ReadElementContents =
-            new Dictionary<Type, Func<XmlReader, object>>
-                {
-                    { typeof(System.Object), x => x.ReadElementContentAsObject() },
-                    { typeof(System.Boolean), x => x.ReadElementContentAsBoolean() },
-                    { typeof(System.DateTime), x => x.ReadElementContentAsDateTime() },
-                    { typeof(System.Double), x => x.ReadElementContentAsDouble() },
-                    { typeof(System.Single), x => x.ReadElementContentAsFloat() },
-                    { typeof(System.Decimal), x => x.ReadElementContentAsDecimal() },
-                    { typeof(System.Int32), x => x.ReadElementContentAsInt() },
-                    { typeof(System.Int64), x => x.ReadElementContentAsLong() },
-                    { typeof(System.String), x => x.ReadElementContentAsString() },
-                };
+        internal static readonly HashSet<Type> ReadElementContentAsTypes = new HashSet<Type>
+        {
+            typeof (System.Boolean),
+            typeof (System.Nullable<System.Boolean>),
+            typeof (System.DateTime),
+            typeof (System.Nullable<System.DateTime>),
+            typeof (System.DateTimeOffset),
+            typeof (System.Nullable<System.DateTimeOffset>),
+            typeof (System.Double),
+            typeof (System.Nullable<System.Double>),
+            typeof (System.Single),
+            typeof (System.Nullable<System.Single>),
+            typeof (System.Decimal),
+            typeof (System.Nullable<System.Decimal>),
+            typeof (System.Int32),
+            typeof (System.Nullable<System.Int32>),
+            typeof (System.Int64),
+            typeof (System.Nullable<System.Int64>),
+        };
 
         public static XmlReader ReadAttribute<T>(this XmlReader reader, Expression<Func<T>> property)
         {
@@ -63,6 +47,64 @@
         {
             map.Read(reader);
             return reader;
+        }
+
+        public static T ReadAttributeAs<T>(this XmlReader reader, string localName)
+        {
+            reader.MoveToContent();
+            reader.MoveToAttribute(localName);
+            var value = reader.ReadAttributeValueAs<T>();
+            VerifyNullable<T>(value, localName);
+            return value;
+        }
+
+        public static T ReadAttributeValueAs<T>(this XmlReader reader)
+        {
+            if (reader.NodeType != XmlNodeType.Attribute)
+            {
+                throw new SerializationException("Failing to read attribute reader.NodeType != XmlNodeType.Attribute");
+            }
+            if (typeof(Object) == typeof(T))
+            {
+                return (dynamic)reader.ReadContentAsObject();
+            }
+            if (typeof(Boolean) == typeof(T) || typeof(Nullable<Boolean>) == typeof(T))
+            {
+                return (dynamic)reader.ReadContentAsBoolean();
+            }
+            if (typeof(DateTime) == typeof(T) || typeof(Nullable<DateTime>) == typeof(T))
+            {
+                return (dynamic)reader.ReadContentAsDateTime();
+            }
+            if (typeof(DateTimeOffset) == typeof(T) || typeof(Nullable<DateTimeOffset>) == typeof(T))
+            {
+                return (dynamic)reader.ReadContentAsDateTimeOffset();
+            }
+            if (typeof(Double) == typeof(T) || typeof(Nullable<Double>) == typeof(T))
+            {
+                return (dynamic)reader.ReadContentAsDouble();
+            }
+            if (typeof(Single) == typeof(T) || typeof(Nullable<Single>) == typeof(T))
+            {
+                return (dynamic)reader.ReadContentAsFloat();
+            }
+            if (typeof(Decimal) == typeof(T) || typeof(Nullable<Decimal>) == typeof(T))
+            {
+                return (dynamic)reader.ReadContentAsDecimal();
+            }
+            if (typeof(Int32) == typeof(T) || typeof(Nullable<Int32>) == typeof(T))
+            {
+                return (dynamic)reader.ReadContentAsInt();
+            }
+            if (typeof(Int64) == typeof(T) || typeof(Nullable<Int64>) == typeof(T))
+            {
+                return (dynamic)reader.ReadContentAsLong();
+            }
+            if (typeof(String) == typeof(T))
+            {
+                return (dynamic)reader.ReadContentAsString();
+            }
+            throw new SerializationException(string.Format("No conversion for {0}", typeof(T).FullName));
         }
 
         public static XmlReader ReadElement<T>(this XmlReader reader, Expression<Func<T>> property)
@@ -86,86 +128,10 @@
             return reader;
         }
 
-        public static void Read<T>(this XmlReader reader, T instance) where T : IXmlMapped
-        {
-            var xmlMapping = instance.GetMap();
-            foreach (var map in xmlMapping.AttributeMappings)
-            {
-                map.Read(reader);
-            }
-
-            foreach (var map in xmlMapping.ElementMappings)
-            {
-                map.Read(reader);
-            }
-        }
-
-        public static T ReadAttributeAs<T>(this XmlReader reader, string localName)
-        {
-            reader.MoveToContent();
-            reader.MoveToAttribute(localName);
-            var value = reader.ReadAttributeValueAs<T>();
-            VerifyNullable<T>(value, localName);
-            return value;
-        }
-
-        public static T ReadAttributeValueAs<T>(this XmlReader reader)
-        {
-            if (reader.NodeType != XmlNodeType.Attribute)
-            {
-                throw new SerializationException("Failing to read attribute reader.NodeType != XmlNodeType.Attribute");
-            }
-            if (typeof(System.Object) == typeof(T))
-            {
-                return (dynamic)reader.ReadContentAsObject();
-            }
-            if (typeof(System.Boolean) == typeof(T) || typeof(System.Nullable<System.Boolean>) == typeof(T))
-            {
-                return (dynamic)reader.ReadContentAsBoolean();
-            }
-            if (typeof(System.DateTime) == typeof(T) || typeof(System.Nullable<System.DateTime>) == typeof(T))
-            {
-                return (dynamic)reader.ReadContentAsDateTime();
-            }
-            if (typeof(System.DateTimeOffset) == typeof(T) || typeof(System.Nullable<System.DateTimeOffset>) == typeof(T))
-            {
-                return (dynamic)reader.ReadContentAsDateTimeOffset();
-            }
-            if (typeof(System.Double) == typeof(T) || typeof(System.Nullable<System.Double>) == typeof(T))
-            {
-                return (dynamic)reader.ReadContentAsDouble();
-            }
-            if (typeof(System.Single) == typeof(T) || typeof(System.Nullable<System.Single>) == typeof(T))
-            {
-                return (dynamic)reader.ReadContentAsFloat();
-            }
-            if (typeof(System.Decimal) == typeof(T) || typeof(System.Nullable<System.Decimal>) == typeof(T))
-            {
-                return (dynamic)reader.ReadContentAsDecimal();
-            }
-            if (typeof(System.Int32) == typeof(T) || typeof(System.Nullable<System.Int32>) == typeof(T))
-            {
-                return (dynamic)reader.ReadContentAsInt();
-            }
-            if (typeof(System.Int64) == typeof(T) || typeof(System.Nullable<System.Int64>) == typeof(T))
-            {
-                return (dynamic)reader.ReadContentAsLong();
-            }
-            if (typeof(System.String) == typeof(T))
-            {
-                return (dynamic)reader.ReadContentAsString();
-            }
-            throw new SerializationException(string.Format("No conversion for {0}", typeof(T).FullName));
-        }
-
         public static T ReadElementAs<T>(this XmlReader reader, string localName, string ownerName)
         {
             reader.MoveToContent();
-            var isEmptyElement = reader.IsEmptyElement; // (1)
-            if (reader.Name == ownerName)
-            {
-                reader.ReadStartElement();
-            }
+            var isEmptyElement = reader.IsEmptyElement;
             if (reader.Name != localName)
             {
                 if (!typeof(T).CanBeNull())
@@ -178,9 +144,24 @@
             {
                 if (reader.CanResolveEntity)
                 {
-                    var value = reader.ReadElementValueAs<T>();
-                    VerifyNullable<T>(value, localName);
-                    return value;
+                    if (typeof(T) == typeof(string))
+                    {
+                        return (dynamic)reader.ReadElementContentAsString();
+                    }
+                    if (ReadElementContentAsTypes.Contains(typeof(T)))
+                    {
+                        var value = reader.ReadElementValueAs<T>();
+                        VerifyNullable<T>(value, localName);
+                        return value;
+                    }
+                    if (typeof(IXmlSerializable).IsAssignableFrom(typeof(T)))
+                    {
+                        var instance = (IXmlSerializable)Activator.CreateInstance(typeof(T), true);
+                        instance.ReadXml(reader);
+                        reader.ReadEndElement();
+                        return (T)instance;
+                    }
+                    throw new NotImplementedException();
                 }
                 else
                 {
@@ -200,44 +181,67 @@
             {
                 throw new SerializationException("reader.NodeType != XmlNodeType.Element");
             }
-            if (typeof(System.Object) == typeof(T))
+            if (typeof(Object) == typeof(T))
             {
                 return (dynamic)reader.ReadElementContentAsObject();
             }
-            if (typeof(System.Boolean) == typeof(T) || typeof(System.Nullable<System.Boolean>) == typeof(T))
+            if (typeof(Boolean) == typeof(T) || typeof(Nullable<Boolean>) == typeof(T))
             {
                 return (dynamic)reader.ReadElementContentAsBoolean();
             }
-            if (typeof(System.DateTime) == typeof(T) || typeof(System.Nullable<System.DateTime>) == typeof(T))
+            if (typeof(DateTime) == typeof(T) || typeof(Nullable<DateTime>) == typeof(T))
             {
                 return (dynamic)reader.ReadElementContentAsDateTime();
             }
-            if (typeof(System.Double) == typeof(T) || typeof(System.Nullable<System.Double>) == typeof(T))
+            if (typeof(Double) == typeof(T) || typeof(Nullable<Double>) == typeof(T))
             {
                 return (dynamic)reader.ReadElementContentAsDouble();
             }
-            if (typeof(System.Single) == typeof(T) || typeof(System.Nullable<System.Single>) == typeof(T))
+            if (typeof(Single) == typeof(T) || typeof(Nullable<Single>) == typeof(T))
             {
                 return (dynamic)reader.ReadElementContentAsFloat();
             }
-            if (typeof(System.Decimal) == typeof(T) || typeof(System.Nullable<System.Decimal>) == typeof(T))
+            if (typeof(Decimal) == typeof(T) || typeof(Nullable<Decimal>) == typeof(T))
             {
                 return (dynamic)reader.ReadElementContentAsDecimal();
             }
-            if (typeof(System.Int32) == typeof(T) || typeof(System.Nullable<System.Int32>) == typeof(T))
+            if (typeof(Int32) == typeof(T) || typeof(Nullable<Int32>) == typeof(T))
             {
                 return (dynamic)reader.ReadElementContentAsInt();
             }
-            if (typeof(System.Int64) == typeof(T) || typeof(System.Nullable<System.Int64>) == typeof(T))
+            if (typeof(Int64) == typeof(T) || typeof(Nullable<Int64>) == typeof(T))
             {
                 return (dynamic)reader.ReadElementContentAsLong();
             }
-            if (typeof(System.String) == typeof(T))
+            if (typeof(String) == typeof(T))
             {
                 return (dynamic)reader.ReadElementContentAsString();
             }
 
             throw new SerializationException(string.Format("No conversion for {0}", typeof(T).FullName));
+        }
+
+        public static void Read<T>(this XmlReader reader, T instance) where T : IXmlMapped
+        {
+            var xmlMapping = instance.GetMap();
+            foreach (var map in xmlMapping.AttributeMappings)
+            {
+                map.Read(reader);
+            }
+            if (xmlMapping.AttributeMappings.Any())
+            {
+                reader.Read();
+            }
+            else
+            {
+                reader.ReadStartElement();
+            }
+
+            foreach (var map in xmlMapping.ElementMappings)
+            {
+                map.Read(reader);
+            }
+            //reader.ReadEndElement();
         }
 
         public static void VerifyNullable<T>(object value, string localName)

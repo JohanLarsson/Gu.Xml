@@ -1,13 +1,15 @@
 ﻿namespace Gu.Xml.Tests.Dummies
 {
+    using System;
     using System.Xml;
     using System.Xml.Schema;
 
-    public class SimpleIXmlSerializableClass : IXmlMapped
+    public class MappedWithNullable : IXmlMapped
     {
-        public int Value1 { get; set; }
-        public int Value2 { get; set; }
-        
+        public Nullable<int> Value1 { get; set; }
+
+        public Nullable<int> Value2 { get; set; }
+
         public XmlSchema GetSchema()
         {
             return null;
@@ -23,10 +25,9 @@
             writer.Write(this);
         }
 
-        public Gu.Xml.XmlMap GetMap()
+        public XmlMap GetMap()
         {
-            return Gu.Xml.XmlMap.GetOrCreate(
-                this,
+            return XmlMap.Create(
                 x => x.WithElement(() => Value1)
                       .WithAttribute(() => Value2));
         }

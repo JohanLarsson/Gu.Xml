@@ -4,22 +4,22 @@
     using System.Xml;
     using System.Xml.Schema;
 
-    public class ClassWithEnumerable : IXmlMapped
+    public class MappedWithEnumerable : IXmlMapped
     {
-        internal readonly List<SimpleIXmlSerializableClass> _items = new List<SimpleIXmlSerializableClass>();
+        internal readonly List<XmlSerializableClass> _items = new List<XmlSerializableClass>();
 
-        private ClassWithEnumerable()
+        private MappedWithEnumerable()
         {
         }
 
-        public ClassWithEnumerable(int n)
+        public MappedWithEnumerable(int n)
         {
             for (int i = 0; i < n; i++)
             {
-                _items.Add(new SimpleIXmlSerializableClass { Value1 = n, Value2 = 2 * n });
+                _items.Add(new XmlSerializableClass { Value1 = n, Value2 = 2 * n });
             }
         }
-        public IEnumerable<SimpleIXmlSerializableClass> Items
+        public IEnumerable<XmlSerializableClass> Items
         {
             get
             {
@@ -44,9 +44,7 @@
 
         public XmlMap GetMap()
         {
-            return XmlMap.GetOrCreate(
-                this,
-                x => x.WithElement(() => Items, () => _items));
+            return XmlMap.Create(x => x.WithElement(() => Items, () => _items));
         }
     }
 }

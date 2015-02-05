@@ -42,5 +42,26 @@
                 Console.WriteLine("}");
             }
         }
+
+        [Test]
+        public void ReadContentAsHashSet()
+        {
+            var returnTypes = typeof(XmlReader).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                                             .Where(m => m.Name.StartsWith("ReadContentAs") &&
+                                                        !m.Name.Contains("Async") &&
+                                                        !m.GetParameters().Any())
+                                             .Select(x=>x.ReturnType)
+                                             .Distinct()
+                                             .Except(new []{typeof(string), typeof(object)})
+                                             .ToArray();
+            foreach (var returnType in returnTypes)
+            {
+                Console.WriteLine(@"typeof({0}),", returnType.FullName);
+                if (returnType.IsValueType)
+                {
+                    Console.WriteLine(@"typeof(System.Nullable<{0}>),", returnType.FullName);
+                }
+            }
+        }
     }
 }

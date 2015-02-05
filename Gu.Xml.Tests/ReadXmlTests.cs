@@ -12,27 +12,17 @@
         [Test]
         public void ReadMissingNullable()
         {
-            string xml = XmlHeader + @"<ClassWithNullable/>";
-            var classWithNullable = xml.To<ClassWithNullable>();
+            string xml = XmlHeader + @"<WithNullable/>";
+            var classWithNullable = xml.To<WithNullable>();
             Assert.IsNull(classWithNullable.Value1);
             Assert.IsNull(classWithNullable.Value2);
         }
 
         [Test]
-        public void ReadNullableWithValues()
-        {
-            var classWithNullable = new ClassWithNullable { Value1 = 1, Value2 = 2 };
-            var roundtrip = classWithNullable.Roundtrip();
-            Assert.AreEqual(classWithNullable.Value1, roundtrip.Value1);
-            Assert.AreEqual(classWithNullable.Value2, roundtrip.Value2);
-        }
-
-
-        [Test]
         public void ReadWithMissingMappingThrows()
         {
-            string xml = XmlHeader + @"<SimpleIXmlSerializableClass><MissingMapping>Meh</MissingMapping></SimpleIXmlSerializableClass>";
-            var exeption = Assert.Throws<InvalidOperationException>(() => { xml.To<SimpleIXmlSerializableClass>(); });
+            string xml = XmlHeader + @"<XmlSerializableClass><MissingMapping>Meh</MissingMapping></XmlSerializableClass>";
+            var exeption = Assert.Throws<InvalidOperationException>(() => { xml.To<XmlSerializableClass>(); });
             exeption.DumpToConsole();
             Assert.IsInstanceOf<SerializationException>(exeption.InnerException);
         }

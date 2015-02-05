@@ -3,14 +3,17 @@
     using System.Xml;
     using System.Xml.Schema;
 
-    public class ClassWithNestedSimpleIXmlSerializableClass : IXmlMapped
+    public class MappedWithNestedIXmlSerializable : IXmlMapped
     {
         public int Value1 { get; set; }
 
         public int Value2 { get; set; }
 
-        public SimpleIXmlSerializableClass Value3 { get; set; }
+        public XmlSerializableClass Value3 { get; set; }
 
+        public int Value4 { get; set; }
+        
+        public int? Value5 { get; set; }
 
         public XmlSchema GetSchema()
         {
@@ -29,11 +32,12 @@
 
         public Gu.Xml.XmlMap GetMap()
         {
-            return Gu.Xml.XmlMap.GetOrCreate(
-                this,
+            return Gu.Xml.XmlMap.Create(
                 x => x.WithElement(() => Value1)
                       .WithAttribute(() => Value2)
-                      .WithElement(() => Value3));
+                      .WithElement(() => Value3)
+                      .WithElement(() => Value4)
+                      .WithElement(() => Value5));
         }
     }
 }

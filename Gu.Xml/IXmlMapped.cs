@@ -22,7 +22,7 @@
         /// 
         ///        public Gu.Xml.XmlMapping GetMap()
         ///        {
-        ///            return Gu.Xml.XmlMapping.GetOrCreate(
+        ///            return Gu.Xml.XmlMapping.Create(
         ///                this,
         ///                x => x.WithElement(() => Value1)
         ///                      .WithAttribute(() => Value2)

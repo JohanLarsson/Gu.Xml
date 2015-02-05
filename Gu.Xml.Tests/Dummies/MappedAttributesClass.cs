@@ -3,29 +3,21 @@
     using System.Xml;
     using System.Xml.Schema;
 
-    public class MappedClass : IXmlMapped
+    public class MappedAttributesClass : IXmlMapped
     {
         private int _value3;
         private readonly int _value4;
 
-        private MappedClass()
+        private MappedAttributesClass()
         {
         }
 
-        public MappedClass(bool value1, string value2, int value3, int value4)
+        public MappedAttributesClass(bool value1, string value2, int value3, int value4)
         {
             Value1 = value1;
             Value2 = value2;
             _value3 = value3;
             _value4 = value4;
-        }
-
-        public static ElementClass Default
-        {
-            get
-            {
-                return new ElementClass(true, "2", 3, 4);
-            }
         }
 
         public bool Value1 { get; private set; }
@@ -57,13 +49,13 @@
             writer.Write(this);
         }
 
-        public Gu.Xml.XmlMap GetMap()
+        public XmlMap GetMap()
         {
-            return Gu.Xml.XmlMap.Create(
-                x => x.WithElement(() => Value1)
-                      .WithAttribute(() => Value2)
-                      .WithElement(() => Value3, () => _value3)
-                      .WithAttribute(() => Value4, () => _value4));
+            return XmlMap.Create(
+                x => x.WithAttribute(() => Value1)
+                    .WithAttribute(() => Value2)
+                    .WithAttribute(() => Value3, () => _value3)
+                    .WithAttribute(() => Value4, () => _value4));
         }
     }
 }

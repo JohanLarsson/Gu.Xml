@@ -7,17 +7,9 @@ namespace Gu.Xml.Tests
     public class WriteXmlTests
     {
         [Test]
-        public void WriteAttributesClass()
-        {
-            var dummyClass = AttributesClass.Default;
-            var xml = dummyClass.ToXml();
-            Console.Write(xml);
-        }
-
-        [Test]
         public void WriteElementClass()
         {
-            var dummyClass = ElementClass.Default;
+            var dummyClass = new ElementClass(true, "", 2, 3);
             var xml = dummyClass.ToXml();
             Console.Write(xml);
         }
@@ -25,7 +17,7 @@ namespace Gu.Xml.Tests
         [Test]
         public void WriteClassWithNullable()
         {
-            var classWithNullable = new ClassWithNullable();
+            var classWithNullable = new WithNullable();
             var xml = classWithNullable.ToXml();
             Console.WriteLine(xml);
         }

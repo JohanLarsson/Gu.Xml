@@ -12,26 +12,43 @@ namespace Gu.Xml
     public static class XmlWriterExt
     {
         private static readonly ConcurrentDictionary<Type, XmlSerializer> Serializers = new ConcurrentDictionary<Type, XmlSerializer>();
-        private static readonly Dictionary<Type, Func<object, string>> ToStrings = new Dictionary<Type, Func<object, string>>
+
+        internal static readonly HashSet<Type> ToStringTypes = new HashSet<Type>
         {
-            {typeof (System.String), x => (string)x},
-            {typeof (System.Boolean), x => XmlConvert.ToString((System.Boolean) x)},
-            {typeof (System.Char), x => XmlConvert.ToString((System.Char) x)},
-            {typeof (System.Decimal), x => XmlConvert.ToString((System.Decimal) x)},
-            {typeof (System.SByte), x => XmlConvert.ToString((System.SByte) x)},
-            {typeof (System.Int16), x => XmlConvert.ToString((System.Int16) x)},
-            {typeof (System.Int32), x => XmlConvert.ToString((System.Int32) x)},
-            {typeof (System.Int64), x => XmlConvert.ToString((System.Int64) x)},
-            {typeof (System.Byte), x => XmlConvert.ToString((System.Byte) x)},
-            {typeof (System.UInt16), x => XmlConvert.ToString((System.UInt16) x)},
-            {typeof (System.UInt32), x => XmlConvert.ToString((System.UInt32) x)},
-            {typeof (System.UInt64), x => XmlConvert.ToString((System.UInt64) x)},
-            {typeof (System.Single), x => XmlConvert.ToString((System.Single) x)},
-            {typeof (System.Double), x => XmlConvert.ToString((System.Double) x)},
-            {typeof (System.TimeSpan), x => XmlConvert.ToString((System.TimeSpan) x)},
-            {typeof (System.DateTime), x => XmlConvert.ToString((System.DateTime) x, XmlDateTimeSerializationMode.Unspecified)},
-            {typeof (System.DateTimeOffset), x => XmlConvert.ToString((System.DateTimeOffset) x)},
-            {typeof (System.Guid), x => XmlConvert.ToString((System.Guid) x)},
+            typeof (System.Boolean),
+            typeof (System.Nullable<System.Boolean>),
+            typeof (System.Char),
+            typeof (System.Nullable<System.Char>),
+            typeof (System.Decimal),
+            typeof (System.Nullable<System.Decimal>),
+            typeof (System.SByte),
+            typeof (System.Nullable<System.SByte>),
+            typeof (System.Int16),
+            typeof (System.Nullable<System.Int16>),
+            typeof (System.Int32),
+            typeof (System.Nullable<System.Int32>),
+            typeof (System.Int64),
+            typeof (System.Nullable<System.Int64>),
+            typeof (System.Byte),
+            typeof (System.Nullable<System.Byte>),
+            typeof (System.UInt16),
+            typeof (System.Nullable<System.UInt16>),
+            typeof (System.UInt32),
+            typeof (System.Nullable<System.UInt32>),
+            typeof (System.UInt64),
+            typeof (System.Nullable<System.UInt64>),
+            typeof (System.Single),
+            typeof (System.Nullable<System.Single>),
+            typeof (System.Double),
+            typeof (System.Nullable<System.Double>),
+            typeof (System.TimeSpan),
+            typeof (System.Nullable<System.TimeSpan>),
+            typeof (System.DateTime),
+            typeof (System.Nullable<System.DateTime>),
+            typeof (System.DateTimeOffset),
+            typeof (System.Nullable<System.DateTimeOffset>),
+            typeof (System.Guid),
+            typeof (System.Nullable<System.Guid>),
         };
 
         public static XmlWriter WriteAttribute<T>(this XmlWriter writer, Expression<Func<T>> property, bool verifyReadWrite = false)
@@ -55,9 +72,13 @@ namespace Gu.Xml
             {
                 writer.WriteAttribute(localName, value, x => (dynamic)x);
             }
-            else
+            else if(ToStringTypes.Contains(typeof(T)))
             {
                 writer.WriteAttribute(localName, value, x => XmlConvert.ToString((dynamic)x));
+            }
+            else
+            {
+                throw new SerializationException("Cannot write {T} as attribute");
             }
             return writer;
         }
@@ -75,7 +96,6 @@ namespace Gu.Xml
             }
             catch (Exception e)
             {
-
                 throw new SerializationException(string.Format("Failed to convert {0} to {1}", value, typeof(T).FullName), e);
             }
 
@@ -105,9 +125,7 @@ namespace Gu.Xml
                 writer.WriteElementString(localName, (dynamic)value);
                 return writer;
             }
-            Type type = typeof(T).IsNullable() ? typeof(T).NullableInnerType() : typeof(T);
-            Func<object, string> toString;
-            if (ToStrings.TryGetValue(type, out toString))
+            if (ToStringTypes.Contains(typeof(T)))
             {
                 writer.WriteElementString(localName, XmlConvert.ToString((dynamic)value));
                 return writer;

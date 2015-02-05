@@ -1,18 +1,13 @@
 ﻿namespace Gu.Xml.Tests.Dummies
 {
-    using System;
     using System.Xml;
     using System.Xml.Schema;
 
-    public class ClassWithNestedSimpleClass : IXmlMapped
+    public class XmlSerializableClass : IXmlMapped
     {
         public int Value1 { get; set; }
-     
         public int Value2 { get; set; }
         
-        public SimpleClass Value3 { get; set; }
-
-
         public XmlSchema GetSchema()
         {
             return null;
@@ -32,8 +27,7 @@
         {
             return Gu.Xml.XmlMap.Create(
                 x => x.WithElement(() => Value1)
-                      .WithAttribute(() => Value2)
-                      .WithElement(() => Value3));
+                      .WithAttribute(() => Value2));
         }
     }
 }

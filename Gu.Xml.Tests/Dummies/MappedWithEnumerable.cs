@@ -6,7 +6,7 @@
 
     public class MappedWithEnumerable : IXmlMapped
     {
-        internal readonly List<XmlSerializableClass> _items = new List<XmlSerializableClass>();
+        internal readonly List<MappedSimpleClass> _items = new List<MappedSimpleClass>();
 
         private MappedWithEnumerable()
         {
@@ -16,10 +16,10 @@
         {
             for (int i = 0; i < n; i++)
             {
-                _items.Add(new XmlSerializableClass { Value1 = n, Value2 = 2 * n });
+                _items.Add(new MappedSimpleClass { Value1 = n, Value2 = 2 * n });
             }
         }
-        public IEnumerable<XmlSerializableClass> Items
+        public IEnumerable<MappedSimpleClass> Items
         {
             get
             {

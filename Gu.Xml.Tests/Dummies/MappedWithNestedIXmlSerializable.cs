@@ -9,7 +9,7 @@
 
         public int Value2 { get; set; }
 
-        public XmlSerializableClass Value3 { get; set; }
+        public MappedSimpleClass Value3 { get; set; }
 
         public int Value4 { get; set; }
         

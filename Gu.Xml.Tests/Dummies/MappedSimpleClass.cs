@@ -3,9 +3,10 @@
     using System.Xml;
     using System.Xml.Schema;
 
-    public class XmlSerializableClass : IXmlMapped
+    public class MappedSimpleClass : IXmlMapped
     {
         public int Value1 { get; set; }
+        
         public int Value2 { get; set; }
         
         public XmlSchema GetSchema()
@@ -23,7 +24,7 @@
             writer.Write(this);
         }
 
-        public Gu.Xml.XmlMap GetMap()
+        public virtual Gu.Xml.XmlMap GetMap()
         {
             return Gu.Xml.XmlMap.Create(
                 x => x.WithElement(() => Value1)

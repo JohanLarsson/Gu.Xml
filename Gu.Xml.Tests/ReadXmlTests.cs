@@ -21,8 +21,8 @@
         [Test]
         public void ReadWithMissingMappingThrows()
         {
-            string xml = XmlHeader + @"<XmlSerializableClass><MissingMapping>Meh</MissingMapping></XmlSerializableClass>";
-            var exeption = Assert.Throws<InvalidOperationException>(() => { xml.To<XmlSerializableClass>(); });
+            string xml = XmlHeader + @"<MappedSimpleClass><MissingMapping>Meh</MissingMapping></MappedSimpleClass>";
+            var exeption = Assert.Throws<InvalidOperationException>(() => { xml.To<MappedSimpleClass>(); });
             exeption.DumpToConsole();
             Assert.IsInstanceOf<SerializationException>(exeption.InnerException);
         }

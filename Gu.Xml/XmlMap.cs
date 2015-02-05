@@ -16,7 +16,7 @@
                 return _attributeMappings;
             }
         }
-        
+
         public IEnumerable<IMap> ElementMappings
         {
             get
@@ -31,9 +31,21 @@
             return this;
         }
 
+        public XmlMap WithElement<T>(string elementName, Expression<Func<T>> property)
+        {
+            _elementMappings.Add(new ElementMap<T>(elementName, property, property, true));
+            return this;
+        }
+
         public XmlMap WithElement<T>(Expression<Func<T>> property, Expression<Func<T>> field)
         {
             _elementMappings.Add(new ElementMap<T>(property, field, true));
+            return this;
+        }
+
+        public XmlMap WithElement<T>(string elementName, Expression<Func<T>> property, Expression<Func<T>> field)
+        {
+            _elementMappings.Add(new ElementMap<T>(elementName, property, field, true));
             return this;
         }
 
@@ -43,9 +55,21 @@
             return this;
         }
 
+        public XmlMap WithAttribute<T>(string attributeName, Expression<Func<T>> property)
+        {
+            _attributeMappings.Add(new AttributeMap<T>(attributeName, property, property, true));
+            return this;
+        }
+
         public XmlMap WithAttribute<T>(Expression<Func<T>> property, Expression<Func<T>> field)
         {
             _attributeMappings.Add(new AttributeMap<T>(property, field, true));
+            return this;
+        }
+
+        public XmlMap WithAttribute<T>(string attributeName, Expression<Func<T>> property, Expression<Func<T>> field)
+        {
+            _attributeMappings.Add(new AttributeMap<T>(attributeName, property, field, true));
             return this;
         }
 

@@ -48,8 +48,10 @@
     <Compile Include="Dummies\ElementClass.cs" />
     <Compile Include="Dummies\MappedAttributesClass.cs" />
     <Compile Include="Dummies\AttributeClassWithMissingSetter.cs" />
+    <Compile Include="Dummies\MappedInherited.cs" />
     <Compile Include="Dummies\MappedWithEnumerable.cs" />
     <Compile Include="Dummies\ClassWithNestedSimpleClass.cs" />
+    <Compile Include="Dummies\MappedWithExplicitXmlNames.cs" />
     <Compile Include="Dummies\MappedWithNestedIXmlSerializable.cs" />
     <Compile Include="Dummies\WithNullable.cs" />
     <Compile Include="Dummies\MappedElementClass.cs" />
@@ -60,7 +62,7 @@
     <Compile Include="Dummies\MissingElement.cs" />
     <Compile Include="Dummies\MappedClass.cs" />
     <Compile Include="Dummies\SimpleClass.cs" />
-    <Compile Include="Dummies\XmlSerializableClass.cs" />
+    <Compile Include="Dummies\MappedSimpleClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadXmlTests.cs" />
     <Compile Include="RoundTrips.cs" />

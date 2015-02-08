@@ -21,6 +21,10 @@
             reader.ReadAttribute(() => Value1);
             reader.Read();
             reader.ReadElement(() => Value2);
+            if (Value2 != null)
+            {
+                reader.ReadEndElement();
+            }
         }
 
         public void WriteXml(XmlWriter writer)

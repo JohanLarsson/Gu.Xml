@@ -4,27 +4,28 @@ namespace Gu.Xml
     using System.Linq.Expressions;
     using System.Xml;
 
-    public class ElementMap<T> : Map<T>
+    public class ElementMap<TProp, TField> : Map<TProp, TField>
+        where TField : TProp
     {
-        internal ElementMap(Expression<Func<T>> property, bool verifyReadWrite)
-            : base(property, verifyReadWrite)
-        {
-        }
+        //internal ElementMap(Expression<Func<T>> property, bool verifyReadWrite)
+        //    : base(property, verifyReadWrite)
+        //{
+        //}
 
-        internal ElementMap(Expression<Func<T>> getter, Expression<Func<T>> setter, bool verifyReadWrite)
-            : base(getter, setter, verifyReadWrite)
-        {
-        }
+        //internal ElementMap(Expression<Func<T>> getter, Expression<Func<T>> setter, bool verifyReadWrite)
+        //    : base(getter, setter, verifyReadWrite)
+        //{
+        //}
 
-        internal ElementMap(string name, Expression<Func<T>> getter, Expression<Func<T>> setter, bool verifyReadWrite)
-            : base(name, getter, setter, verifyReadWrite)
+        internal ElementMap(string name, Expression<Func<TProp>> getter, Expression<Func<TField>> setter, bool verifyReadWrite)
+            : base(name, getter, setter, null, null, verifyReadWrite)
         {
         }
 
         public override void Read(XmlReader reader)
         {
             base.VerifyRead(reader);
-            var value = reader.ReadElementAs<T>(Name, Owner.GetType().Name);
+            var value = (TField)reader.ReadElementAs(Name, Type);
             Setter.Invoke(Owner, value);
         }
 

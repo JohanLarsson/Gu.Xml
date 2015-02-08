@@ -3,7 +3,9 @@ using NUnit.Framework;
 
 namespace Gu.Xml.Tests
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class RoundTrips
     {
@@ -175,7 +177,25 @@ namespace Gu.Xml.Tests
         {
             var instance = new MappedWithEnumerable(2);
             var roundtrip = instance.Roundtrip();
-            CollectionAssert.AreEqual(instance.Items, roundtrip.Items);
+            Assert.AreEqual(instance.Items.Count(), roundtrip.Items.Count());
+            for (int i = 0; i < instance._items.Count; i++)
+            {
+                Assert.AreEqual(instance._items[i].Value1, roundtrip._items[i].Value1);
+                Assert.AreEqual(instance._items[i].Value2, roundtrip._items[i].Value2);
+            }
+        }
+
+        [Test]
+        public void MappedWithEnum()
+        {
+            var instance = new MappedWithEnum
+            {
+                Value1 = StringComparison.InvariantCulture,
+                Value2 = StringComparison.InvariantCultureIgnoreCase
+            };
+            var roundtrip = instance.Roundtrip();
+            Assert.AreEqual(instance.Value1, roundtrip.Value1);
+            Assert.AreEqual(instance.Value2, roundtrip.Value2);
         }
     }
 }

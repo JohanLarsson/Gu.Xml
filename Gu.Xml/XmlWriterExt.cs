@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Xml;
-
-namespace Gu.Xml
+﻿namespace Gu.Xml
 {
+    using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
     using System.Runtime.Serialization;
+    using System.Xml;
     using System.Xml.Serialization;
 
     public static class XmlWriterExt
     {
-        private static readonly ConcurrentDictionary<Type, XmlSerializer> Serializers = new ConcurrentDictionary<Type, XmlSerializer>();
-
         internal static readonly HashSet<Type> ToStringTypes = new HashSet<Type>
         {
             typeof (System.Boolean),
@@ -53,10 +50,11 @@ namespace Gu.Xml
 
         public static XmlWriter WriteAttribute<T>(this XmlWriter writer, Expression<Func<T>> property, bool verifyReadWrite = false)
         {
-            return writer.WriteAttribute(new AttributeMap<T>(property, verifyReadWrite));
+            return writer.WriteAttribute(new AttributeMap<T, T>(property.Name(), property, property, verifyReadWrite));
         }
 
-        public static XmlWriter WriteAttribute<T>(this XmlWriter writer, AttributeMap<T> map)
+        public static XmlWriter WriteAttribute<TProp, TField>(this XmlWriter writer, AttributeMap<TProp, TField> map)
+            where TField : TProp
         {
             map.Write(writer);
             return writer;
@@ -72,7 +70,11 @@ namespace Gu.Xml
             {
                 writer.WriteAttribute(localName, value, x => (dynamic)x);
             }
-            else if(ToStringTypes.Contains(typeof(T)))
+            else if (typeof(T).IsEnum)
+            {
+                writer.WriteAttribute(localName, value, x => (dynamic)x.ToString());
+            }
+            else if (ToStringTypes.Contains(typeof(T)))
             {
                 writer.WriteAttribute(localName, value, x => XmlConvert.ToString((dynamic)x));
             }
@@ -105,10 +107,11 @@ namespace Gu.Xml
 
         public static XmlWriter WriteElement<T>(this XmlWriter writer, Expression<Func<T>> property, bool verifyReadWrite = false)
         {
-            return writer.WriteElement(new ElementMap<T>(property, verifyReadWrite));
+            return writer.WriteElement(new ElementMap<T, T>(property.Name(), property, property, verifyReadWrite));
         }
 
-        public static XmlWriter WriteElement<T>(this XmlWriter writer, ElementMap<T> map)
+        public static XmlWriter WriteElement<TProp, TField>(this XmlWriter writer, ElementMap<TProp, TField> map)
+            where TField : TProp
         {
             map.Write(writer);
             return writer;
@@ -123,6 +126,11 @@ namespace Gu.Xml
             if (typeof(T) == typeof(string))
             {
                 writer.WriteElementString(localName, (dynamic)value);
+                return writer;
+            }
+            if (typeof(T).IsEnum)
+            {
+                writer.WriteElementString(localName, (dynamic)value.ToString());
                 return writer;
             }
             if (ToStringTypes.Contains(typeof(T)))
@@ -143,7 +151,7 @@ namespace Gu.Xml
                 else
                 {
                     writer.WriteStartElement(localName);
-                    var serializer = new XmlSerializer(typeof(T));
+                    var serializer = new XmlSerializer(value.GetType());
                     serializer.Serialize(writer, value);
                     writer.WriteEndElement();
                 }

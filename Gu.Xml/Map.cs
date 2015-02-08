@@ -5,26 +5,33 @@ namespace Gu.Xml
     using System.Runtime.Serialization;
     using System.Xml;
 
-    public abstract class Map<T> : IMap
+    public abstract class Map<TProp,TField> : IMap
+        where TField : TProp
     {
-        private readonly Expression<Func<T>> _setter;
+        private readonly Expression<Func<TField>> _setter;
 
-        protected Map(Expression<Func<T>> property, bool verifyReadWrite)
-            : this(property.Name(), property, property, verifyReadWrite)
-        {
-        }
+        //protected Map(Expression<Func<T>> property, bool verifyReadWrite)
+        //    : this(property.Name(), property, property, verifyReadWrite)
+        //{
+        //}
 
-        protected Map(Expression<Func<T>> getter, Expression<Func<T>> setter, bool verifyReadWrite)
-            : this(getter.Name(), getter, setter, verifyReadWrite)
-        {
-        }
+        //protected Map(Expression<Func<T>> getter, Expression<Func<T>> setter, bool verifyReadWrite)
+        //    : this(getter.Name(), getter, setter, verifyReadWrite)
+        //{
+        //}
 
-        protected Map(string name, Expression<Func<T>> getter, Expression<Func<T>> setter, bool verifyReadWrite)
-            : this(name, getter, setter, null, null, verifyReadWrite)
-        {
-        }
+        //protected Map(string name, Expression<Func<T>> getter, Expression<Func<T>> setter, bool verifyReadWrite)
+        //    : this(name, getter, setter, null, null, verifyReadWrite)
+        //{
+        //}
 
-        protected Map(string name, Expression<Func<T>> getter, Expression<Func<T>> setter, Action<XmlReader, T> serialize, Func<XmlReader, T> deserialize, bool verifyReadWrite)
+        protected Map(
+            string name, 
+            Expression<Func<TProp>> getter, 
+            Expression<Func<TField>> setter, 
+            Action<XmlReader, TField> serialize, 
+            Func<XmlReader, TField> deserialize,
+            bool verifyReadWrite)
         {
             _setter = setter;
             if (string.IsNullOrWhiteSpace(name))
@@ -44,13 +51,13 @@ namespace Gu.Xml
             CanSet = setter.CanSet();
         }
 
-        public Expression<Func<T>> Getter { get; private set; }
+        public Expression<Func<TProp>> Getter { get; private set; }
         
-        public Action<XmlReader, T> Serialize { get; private set; }
+        public Action<XmlReader, TField> Serialize { get; private set; }
         
-        public Func<XmlReader, T> Deserialize { get; private set; }
+        public Func<XmlReader, TField> Deserialize { get; private set; }
 
-        public Action<object, T> Setter { get; private set; }
+        public Action<object, TField> Setter { get; private set; }
 
         public string Name { get; private set; }
 
@@ -58,7 +65,7 @@ namespace Gu.Xml
 
         public bool CanSet { get; private set; }
 
-        public T Value
+        public TField Value
         {
             get
             {
@@ -71,7 +78,7 @@ namespace Gu.Xml
         {
             get
             {
-                return typeof(T);
+                return typeof(TField);
             }
         }
 

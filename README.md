@@ -1,6 +1,9 @@
 # Gu.Xml
 Extensions for XmlReader &amp; XmlWriter
-Prototyping a helper for implementing IXmSerializable. Define a map like (see tests for more samples):
+
+Prototyping a helper for implementing IXmSerializable.
+
+Define a map like this:
 
     public virtual XmlMap GetMap()
     {
@@ -15,3 +18,5 @@ Handles:
 - backing (readonly) field.
 - IEnumerable&lt;T&gt; backed by List&lt;T&gt;
 - Inheritance
+
+See test project for more samples.

@@ -3,7 +3,7 @@
     using System.Xml;
     using System.Xml.Schema;
 
-    public class MappedWithNestedIXmlSerializable : IXmlMapped
+    public class MappedWithNestedMapped : IXmlMapped
     {
         public int Value1 { get; set; }
 

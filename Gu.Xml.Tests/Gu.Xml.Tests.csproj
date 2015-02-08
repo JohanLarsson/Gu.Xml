@@ -52,7 +52,7 @@
     <Compile Include="Dummies\MappedWithEnumerable.cs" />
     <Compile Include="Dummies\ClassWithNestedSimpleClass.cs" />
     <Compile Include="Dummies\MappedWithExplicitXmlNames.cs" />
-    <Compile Include="Dummies\MappedWithNestedIXmlSerializable.cs" />
+    <Compile Include="Dummies\MappedWithNestedMapped.cs" />
     <Compile Include="Dummies\WithNullable.cs" />
     <Compile Include="Dummies\MappedElementClass.cs" />
     <Compile Include="Dummies\DummyStruct.cs" />

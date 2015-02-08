@@ -153,9 +153,9 @@ namespace Gu.Xml.Tests
         }
 
         [Test]
-        public void MappedWithNestedIXmlSerializable()
+        public void MappedWithNestedMapped()
         {
-            var instance = new MappedWithNestedIXmlSerializable
+            var instance = new MappedWithNestedMapped
             {
                 Value1 = 1,
                 Value2 = 2,

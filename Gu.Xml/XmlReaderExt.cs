@@ -158,10 +158,16 @@ namespace Gu.Xml
                     {
                         var instance = (IXmlSerializable)Activator.CreateInstance(typeof(T), true);
                         instance.ReadXml(reader);
-                        reader.ReadEndElement();
                         return (T)instance;
                     }
-                    throw new NotImplementedException();
+                    else
+                    {
+                        reader.ReadStartElement();
+                        var serializer = new XmlSerializer(typeof(T));
+                        var value = (T)serializer.Deserialize(reader);
+                        reader.ReadEndElement();
+                        return value;
+                    }
                 }
                 else
                 {
@@ -223,25 +229,22 @@ namespace Gu.Xml
 
         public static void Read<T>(this XmlReader reader, T instance) where T : IXmlMapped
         {
+            reader.MoveToContent();
+            var isEmptyElement = reader.IsEmptyElement;
             var xmlMapping = instance.GetMap();
-            foreach (var map in xmlMapping.AttributeMappings)
+            foreach (var map in xmlMapping.AttributeMaps)
             {
                 map.Read(reader);
             }
-            if (xmlMapping.AttributeMappings.Any())
-            {
-                reader.Read();
-            }
-            else
-            {
-                reader.ReadStartElement();
-            }
-
-            foreach (var map in xmlMapping.ElementMappings)
+            reader.Read();
+            foreach (var map in xmlMapping.ElementMaps)
             {
                 map.Read(reader);
             }
-            //reader.ReadEndElement();
+            if (!isEmptyElement)
+            {
+                reader.ReadEndElement();
+            }
         }
 
         public static void VerifyNullable<T>(object value, string localName)

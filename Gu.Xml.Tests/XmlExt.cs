@@ -9,11 +9,11 @@
     {
         public static T Roundtrip<T>(this T item, bool printXmlToConsole = true)
         {
-            var list = new List<T> {item, item};
+            var list = new T[] {item, item};
             item.ToXml(printXmlToConsole);
             var listXml = list.ToXml(false);
-            var roundtrip = listXml.To<List<T>>();
-            return roundtrip[0];
+            var roundtrip = listXml.To<T[]>();
+            return roundtrip[1];
         }
 
         public static string ToXml<T>(this T item, bool printXmlToConsole = true)
@@ -23,7 +23,8 @@
                 var stringBuilder = new StringBuilder();
                 using (var writer = new StringWriter(stringBuilder))
                 {
-                    var serializer = new XmlSerializer(typeof(T));
+                    var type = typeof(T);
+                    var serializer = new XmlSerializer(type);
                     serializer.Serialize(writer, item);
                     var xml = stringBuilder.ToString();
                     if (printXmlToConsole)

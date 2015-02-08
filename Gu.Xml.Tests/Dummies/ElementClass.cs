@@ -50,6 +50,7 @@ namespace Gu.Xml.Tests.Dummies
                   .ReadElement(() => Value3, () => _value3)
                   .ReadElement(() => Value4, () => _value4)
                   .ReadElement(() => Value5);
+            reader.ReadEndElement();
         }
 
         public void WriteXml(XmlWriter writer)

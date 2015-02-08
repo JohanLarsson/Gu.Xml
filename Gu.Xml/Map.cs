@@ -7,6 +7,8 @@ namespace Gu.Xml
 
     public abstract class Map<T> : IMap
     {
+        private readonly Expression<Func<T>> _setter;
+
         protected Map(Expression<Func<T>> property, bool verifyReadWrite)
             : this(property.Name(), property, property, verifyReadWrite)
         {
@@ -24,6 +26,7 @@ namespace Gu.Xml
 
         protected Map(string name, Expression<Func<T>> getter, Expression<Func<T>> setter, Action<XmlReader, T> serialize, Func<XmlReader, T> deserialize, bool verifyReadWrite)
         {
+            _setter = setter;
             if (string.IsNullOrWhiteSpace(name))
             {
                 throw new SerializationException("Element or attribute name cannot be empty");
@@ -59,8 +62,8 @@ namespace Gu.Xml
         {
             get
             {
-                return Getter.Compile()
-                             .Invoke();
+                return _setter.Compile()
+                              .Invoke();
             }
         }
 
@@ -87,6 +90,11 @@ namespace Gu.Xml
         private void ThrowCannotSetSetter()
         {
             throw new SerializationException(string.Format("Failng to set value for element: {0} read from xml. Possible solutions: {1} -1 Add (private) set; to the property {1} -2 Supply a field mapping ex: () => _backingField{1} -3 Do not serialize if it is a calculated property", Name, Environment.NewLine));
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Name: {0}", Name);
         }
     }
 }

@@ -6,70 +6,70 @@
 
     public class XmlMap
     {
-        private readonly List<IMap> _attributeMappings = new List<IMap>();
-        private readonly List<IMap> _elementMappings = new List<IMap>();
+        private readonly List<IMap> _attributeMaps = new List<IMap>();
+        private readonly List<IMap> _elementMaps = new List<IMap>();
 
-        public IEnumerable<IMap> AttributeMappings
+        public IEnumerable<IMap> AttributeMaps
         {
             get
             {
-                return _attributeMappings;
+                return _attributeMaps;
             }
         }
 
-        public IEnumerable<IMap> ElementMappings
+        public IEnumerable<IMap> ElementMaps
         {
             get
             {
-                return _elementMappings;
+                return _elementMaps;
             }
         }
 
         public XmlMap WithElement<T>(Expression<Func<T>> property)
         {
-            _elementMappings.Add(new ElementMap<T>(property, true));
+            _elementMaps.Add(new ElementMap<T>(property, true));
             return this;
         }
 
         public XmlMap WithElement<T>(string elementName, Expression<Func<T>> property)
         {
-            _elementMappings.Add(new ElementMap<T>(elementName, property, property, true));
+            _elementMaps.Add(new ElementMap<T>(elementName, property, property, true));
             return this;
         }
 
         public XmlMap WithElement<T>(Expression<Func<T>> property, Expression<Func<T>> field)
         {
-            _elementMappings.Add(new ElementMap<T>(property, field, true));
+            _elementMaps.Add(new ElementMap<T>(property, field, true));
             return this;
         }
 
         public XmlMap WithElement<T>(string elementName, Expression<Func<T>> property, Expression<Func<T>> field)
         {
-            _elementMappings.Add(new ElementMap<T>(elementName, property, field, true));
+            _elementMaps.Add(new ElementMap<T>(elementName, property, field, true));
             return this;
         }
 
         public XmlMap WithAttribute<T>(Expression<Func<T>> property)
         {
-            _attributeMappings.Add(new AttributeMap<T>(property, true));
+            _attributeMaps.Add(new AttributeMap<T>(property, true));
             return this;
         }
 
         public XmlMap WithAttribute<T>(string attributeName, Expression<Func<T>> property)
         {
-            _attributeMappings.Add(new AttributeMap<T>(attributeName, property, property, true));
+            _attributeMaps.Add(new AttributeMap<T>(attributeName, property, property, true));
             return this;
         }
 
         public XmlMap WithAttribute<T>(Expression<Func<T>> property, Expression<Func<T>> field)
         {
-            _attributeMappings.Add(new AttributeMap<T>(property, field, true));
+            _attributeMaps.Add(new AttributeMap<T>(property, field, true));
             return this;
         }
 
         public XmlMap WithAttribute<T>(string attributeName, Expression<Func<T>> property, Expression<Func<T>> field)
         {
-            _attributeMappings.Add(new AttributeMap<T>(attributeName, property, field, true));
+            _attributeMaps.Add(new AttributeMap<T>(attributeName, property, field, true));
             return this;
         }
 

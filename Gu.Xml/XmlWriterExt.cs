@@ -140,9 +140,13 @@ namespace Gu.Xml
                     writer.WriteEndElement();
                     return writer;
                 }
-                throw new NotImplementedException("message");
-                var serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(localName));
-                serializer.Serialize(writer, value);
+                else
+                {
+                    writer.WriteStartElement(localName);
+                    var serializer = new XmlSerializer(typeof(T));
+                    serializer.Serialize(writer, value);
+                    writer.WriteEndElement();
+                }
             }
             return writer;
         }
@@ -150,12 +154,12 @@ namespace Gu.Xml
         public static void Write<T>(this XmlWriter writer, T instance) where T : IXmlMapped
         {
             var xmlMapping = instance.GetMap();
-            foreach (var map in xmlMapping.AttributeMappings)
+            foreach (var map in xmlMapping.AttributeMaps)
             {
                 map.Write(writer);
             }
 
-            foreach (var map in xmlMapping.ElementMappings)
+            foreach (var map in xmlMapping.ElementMaps)
             {
                 map.Write(writer);
             }

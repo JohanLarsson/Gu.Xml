@@ -56,6 +56,30 @@ namespace Gu.Xml.Tests
         }
 
         [Test]
+        public void MappedWithNestedMapped()
+        {
+            var instance = new MappedWithNestedMapped
+            {
+                Value1 = 1,
+                Value2 = 2,
+                Value3 = new MappedSimpleClass { Value1 = 1, Value2 = 2 },
+                Value4 = 4,
+                Value5 = 5
+            };
+            var xml = instance.ToXml();
+            var expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<MappedWithNestedMapped Value2=""2"">
+  <Value1>1</Value1>
+  <Value3 Value2=""2"">
+    <Value1>1</Value1>
+  </Value3>
+  <Value4>4</Value4>
+  <Value5>5</Value5>
+</MappedWithNestedMapped>";
+            Assert.AreEqual(expected, xml);
+        }
+
+        [Test]
         public void MappedWithExplicitXmlNames()
         {
             var instance = new MappedWithExplicitXmlNames(1, 2, 3, 4);
@@ -69,7 +93,7 @@ namespace Gu.Xml.Tests
         }
 
         [Test]
-        public void WriteClassWithNullable()
+        public void MappedWithNullable()
         {
             var classWithNullable = new MappedWithNullable();
             var xml = classWithNullable.ToXml();

@@ -1,7 +1,7 @@
 # Gu.Xml
 Extensions for XmlReader &amp; XmlWriter
 
-Prototyping a helper for implementing IXmSerializable.
+Prototyping a helper for implementing IXmlSerializable.
 
 Define a map like this:
 

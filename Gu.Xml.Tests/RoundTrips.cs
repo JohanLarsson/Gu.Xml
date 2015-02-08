@@ -68,6 +68,17 @@ namespace Gu.Xml.Tests
         }
 
         [Test]
+        public void MappedClass()
+        {
+            var instance = new MappedClass(true, "2", 3, 4);
+            var roundtrip = instance.Roundtrip();
+            Assert.AreEqual(instance.Value1, roundtrip.Value1);
+            Assert.AreEqual(instance.Value2, roundtrip.Value2);
+            Assert.AreEqual(instance.Value3, roundtrip.Value3);
+            CollectionAssert.AreEqual(instance.Value4, roundtrip.Value4);
+        }
+
+        [Test]
         public void ListWithTwoMappedSimples()
         {
             var instance = new List<MappedSimpleClass>
@@ -130,7 +141,7 @@ namespace Gu.Xml.Tests
         [Test]
         public void RoundtripXmlMappingDummy()
         {
-            var instance = MappedClass.Default;
+            var instance = new MappedClass(true, "2", 3, 4);
             var roundtrip = instance.Roundtrip();
             Assert.AreEqual(instance.Value1, roundtrip.Value1);
             Assert.AreEqual(instance.Value2, roundtrip.Value2);

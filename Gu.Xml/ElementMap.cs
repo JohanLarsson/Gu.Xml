@@ -7,16 +7,6 @@ namespace Gu.Xml
     public class ElementMap<TProp, TField> : Map<TProp, TField>
         where TField : TProp
     {
-        //internal ElementMap(Expression<Func<T>> property, bool verifyReadWrite)
-        //    : base(property, verifyReadWrite)
-        //{
-        //}
-
-        //internal ElementMap(Expression<Func<T>> getter, Expression<Func<T>> setter, bool verifyReadWrite)
-        //    : base(getter, setter, verifyReadWrite)
-        //{
-        //}
-
         internal ElementMap(string name, Expression<Func<TProp>> getter, Expression<Func<TField>> setter, bool verifyReadWrite)
             : base(name, getter, setter, null, null, verifyReadWrite)
         {

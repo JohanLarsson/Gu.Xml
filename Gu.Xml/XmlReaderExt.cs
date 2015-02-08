@@ -9,7 +9,7 @@ namespace Gu.Xml
     using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
     using System.Xml;
-    public static partial class XmlReaderExt
+    public static class XmlReaderExt
     {
         internal static readonly HashSet<Type> ReadElementContentAsTypes = new HashSet<Type>
         {

@@ -1,12 +1,14 @@
 ﻿namespace Gu.Xml.Tests.Dummies
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Xml;
     using System.Xml.Schema;
 
     public class MappedClass : IXmlMapped
     {
         private int _value3;
-        private readonly int _value4;
+        private readonly List<int> _value4;
 
         private MappedClass()
         {
@@ -17,15 +19,7 @@
             Value1 = value1;
             Value2 = value2;
             _value3 = value3;
-            _value4 = value4;
-        }
-
-        public static ElementClass Default
-        {
-            get
-            {
-                return new ElementClass(true, "2", 3, 4);
-            }
+            _value4 = Enumerable.Range(0, value4).ToList();
         }
 
         public bool Value1 { get; private set; }
@@ -37,7 +31,7 @@
             get { return _value3; }
         }
 
-        public int Value4
+        public IEnumerable<int> Value4
         {
             get { return _value4; }
         }
@@ -47,23 +41,22 @@
             return null;
         }
 
-        public void ReadXml(XmlReader reader)
+        public virtual void ReadXml(XmlReader reader)
         {
             reader.Read(this);
         }
 
-        public void WriteXml(XmlWriter writer)
+        public virtual void WriteXml(XmlWriter writer)
         {
             writer.Write(this);
         }
 
-        public Gu.Xml.XmlMap GetMap()
+        public virtual XmlMap GetMap()
         {
-            return Gu.Xml.XmlMap.Create(
-                x => x.WithElement(() => Value1)
-                      .WithAttribute(() => Value2)
-                      .WithElement(() => Value3, () => _value3)
-                      .WithAttribute(() => Value4, () => _value4));
+            return new XmlMap().WithElement(() => Value1)
+                               .WithAttribute(() => Value2)
+                               .WithAttribute(() => Value3, () => _value3)
+                               .WithElement(() => Value4, () => _value4);
         }
     }
 }

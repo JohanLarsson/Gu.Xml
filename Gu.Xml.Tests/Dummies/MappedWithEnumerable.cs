@@ -19,6 +19,7 @@
                 _items.Add(new MappedSimpleClass { Value1 = n, Value2 = 2 * n });
             }
         }
+
         public IEnumerable<MappedSimpleClass> Items
         {
             get
@@ -44,7 +45,7 @@
 
         public XmlMap GetMap()
         {
-            return XmlMap.Create(x => x.WithElement(() => Items, () => _items));
+            return new XmlMap().WithElement(() => Items, () => _items);
         }
     }
 }

@@ -10,21 +10,6 @@ namespace Gu.Xml
     {
         private readonly Expression<Func<TField>> _setter;
 
-        //protected Map(Expression<Func<T>> property, bool verifyReadWrite)
-        //    : this(property.Name(), property, property, verifyReadWrite)
-        //{
-        //}
-
-        //protected Map(Expression<Func<T>> getter, Expression<Func<T>> setter, bool verifyReadWrite)
-        //    : this(getter.Name(), getter, setter, verifyReadWrite)
-        //{
-        //}
-
-        //protected Map(string name, Expression<Func<T>> getter, Expression<Func<T>> setter, bool verifyReadWrite)
-        //    : this(name, getter, setter, null, null, verifyReadWrite)
-        //{
-        //}
-
         protected Map(
             string name, 
             Expression<Func<TProp>> getter, 

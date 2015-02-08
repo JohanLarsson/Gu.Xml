@@ -14,21 +14,20 @@
             return null;
         }
 
-        public void ReadXml(XmlReader reader)
+        public virtual void ReadXml(XmlReader reader)
         {
             reader.Read(this);
         }
 
-        public void WriteXml(XmlWriter writer)
+        public virtual void WriteXml(XmlWriter writer)
         {
             writer.Write(this);
         }
 
         public virtual Gu.Xml.XmlMap GetMap()
         {
-            return Gu.Xml.XmlMap.Create(
-                x => x.WithElement(() => Value1)
-                      .WithAttribute(() => Value2));
+            return new XmlMap().WithElement(() => Value1)
+                               .WithAttribute(() => Value2);
         }
     }
 }

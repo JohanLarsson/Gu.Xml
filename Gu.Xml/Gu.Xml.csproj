@@ -41,7 +41,6 @@
   <ItemGroup>
     <Compile Include="AttributeMap.cs" />
     <Compile Include="ElementMap.cs" />
-    <Compile Include="Field.cs" />
     <Compile Include="IMap.cs" />
     <Compile Include="IXmlMapped.cs" />
     <Compile Include="Map.cs" />

@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 namespace Gu.Xml
 {
     using System;
+    using System.Collections;
     using System.Linq.Expressions;
     using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
@@ -179,9 +180,30 @@ namespace Gu.Xml
                     }
                     if (typeof(IXmlSerializable).IsAssignableFrom(type))
                     {
-                        var instance = (IXmlSerializable)Activator.CreateInstance(type, true);
+                        var instanceType = type;
+                        if (type.IsInterface)
+                        {
+                            instanceType = type.Assembly.GetTypes()
+                                               .Single(x => x.Name == localName);
+                            // This is on the simple side for now
+                        }
+                        var instance = (IXmlSerializable)Activator.CreateInstance(instanceType, true);
                         instance.ReadXml(reader);
                         return instance;
+                    }
+                    if (type.IsList())
+                    {
+                        var listElementType = type.ListElementType();
+                        reader.ReadStartElement();
+                        var values = (IList)Activator.CreateInstance(type);
+                        while (reader.NodeType == XmlNodeType.Element)
+                        {
+                            var item = reader.ReadElementAs(reader.Name, listElementType);
+                            values.Add(item);
+                        }
+
+                        reader.ReadEndElement();
+                        return values;
                     }
                     else
                     {

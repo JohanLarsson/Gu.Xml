@@ -1,18 +1,18 @@
-﻿namespace Gu.Xml.Tests.Dummies
+namespace Gu.Xml.Tests.Dummies
 {
     using System.Collections.Generic;
     using System.Xml;
     using System.Xml.Schema;
 
-    public class MappedWithEnumerable : IXmlMapped
+    public class MappedWithEnumerableOfInterface : IXmlMapped
     {
-        internal readonly List<MappedSimpleClass> _items = new List<MappedSimpleClass>();
+        internal readonly List<IMappedSimpleClass> _items = new List<IMappedSimpleClass>();
 
-        private MappedWithEnumerable()
+        private MappedWithEnumerableOfInterface()
         {
         }
 
-        public MappedWithEnumerable(int n)
+        public MappedWithEnumerableOfInterface(int n)
         {
             for (int i = 0; i < n; i++)
             {
@@ -20,7 +20,7 @@
             }
         }
 
-        public IEnumerable<MappedSimpleClass> Items
+        public IEnumerable<IMappedSimpleClass> Items
         {
             get
             {

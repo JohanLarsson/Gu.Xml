@@ -3,7 +3,7 @@
     using System.Xml;
     using System.Xml.Schema;
 
-    public class MappedSimpleClass : IXmlMapped
+    public class MappedSimpleClass : IMappedSimpleClass
     {
         public int Value1 { get; set; }
         

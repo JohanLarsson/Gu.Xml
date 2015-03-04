@@ -7,10 +7,18 @@ namespace Gu.Xml.Tests
     public class WriteXmlTests
     {
         [Test]
+        public void VanillaWithList()
+        {
+            var instance = new VanillaWithList(2);
+            var xml = instance.ToXml();
+            Console.Write(xml);
+        }
+
+        [Test]
         public void MappedElementClass()
         {
-            var dummyClass = new MappedElementClass(true, "", 2, 3);
-            var xml = dummyClass.ToXml();
+            var instance = new MappedElementClass(true, "", 2, 3);
+            var xml = instance.ToXml();
             var expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <MappedElementClass>
   <Value1>true</Value1>

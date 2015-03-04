@@ -1,6 +1,7 @@
 ﻿namespace Gu.Xml
 {
     using System;
+    using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq.Expressions;
@@ -148,10 +149,36 @@
                     writer.WriteEndElement();
                     return writer;
                 }
+                if (typeof(T).IsList())
+                {
+                    var enumerable = (IEnumerable)value;
+                    XmlSerializer serializer = null;
+                    writer.WriteStartElement(localName);
+                    foreach (var item in enumerable)
+                    {
+                        var xmlSerializable = item as IXmlSerializable;
+                        if (xmlSerializable == null)
+                        {
+                            if (serializer == null)
+                            {
+                                serializer = new XmlSerializer(item.GetType());
+                            }  
+                            serializer.Serialize(writer, item);
+                        }
+                        else
+                        {
+                            writer.WriteStartElement(xmlSerializable.GetType().Name);
+                            xmlSerializable.WriteXml(writer);
+                            writer.WriteEndElement();
+                        }
+                    }
+                    writer.WriteEndElement();
+                    return writer;
+                }
                 else
                 {
                     writer.WriteStartElement(localName);
-                    var serializer = new XmlSerializer(value.GetType());
+                    var serializer = new XmlSerializer(typeof(T));
                     serializer.Serialize(writer, value);
                     writer.WriteEndElement();
                 }

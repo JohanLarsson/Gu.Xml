@@ -197,6 +197,19 @@ namespace Gu.Xml.Tests
         }
 
         [Test]
+        public void MappedWithEnumerableOfInterface()
+        {
+            var instance = new MappedWithEnumerableOfInterface(2);
+            var roundtrip = instance.Roundtrip();
+            Assert.AreEqual(instance.Items.Count(), roundtrip.Items.Count());
+            for (int i = 0; i < instance._items.Count; i++)
+            {
+                Assert.AreEqual(instance._items[i].Value1, roundtrip._items[i].Value1);
+                Assert.AreEqual(instance._items[i].Value2, roundtrip._items[i].Value2);
+            }
+        }
+
+        [Test]
         public void MappedWithEnum()
         {
             var instance = new MappedWithEnum

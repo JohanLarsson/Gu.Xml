@@ -7,16 +7,31 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Xml", "Gu.Xml\Gu.Xml.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Xml.Tests", "Gu.Xml.Tests\Gu.Xml.Tests.csproj", "{3848E777-B7B3-4B36-8C6C-234AAD50D35F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{767AD373-65A8-4EBF-A366-426B60BBADB9}"
+	ProjectSection(SolutionItems) = preProject
+		Gu.Xml\Gu.Xml.nuspec = Gu.Xml\Gu.Xml.nuspec
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+		.nuget\nuspec.2010.7.xsd = .nuget\nuspec.2010.7.xsd
+		.nuget\nuspec.2011.8.xsd = .nuget\nuspec.2011.8.xsd
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CreateNugetPackage|Any CPU = CreateNugetPackage|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E73E3548-105D-4D1A-AA1B-6C32F9935D9C}.CreateNugetPackage|Any CPU.ActiveCfg = CreateNugetPackage|Any CPU
+		{E73E3548-105D-4D1A-AA1B-6C32F9935D9C}.CreateNugetPackage|Any CPU.Build.0 = CreateNugetPackage|Any CPU
 		{E73E3548-105D-4D1A-AA1B-6C32F9935D9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E73E3548-105D-4D1A-AA1B-6C32F9935D9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E73E3548-105D-4D1A-AA1B-6C32F9935D9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E73E3548-105D-4D1A-AA1B-6C32F9935D9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3848E777-B7B3-4B36-8C6C-234AAD50D35F}.CreateNugetPackage|Any CPU.ActiveCfg = CreateNugetPackage|Any CPU
+		{3848E777-B7B3-4B36-8C6C-234AAD50D35F}.CreateNugetPackage|Any CPU.Build.0 = CreateNugetPackage|Any CPU
 		{3848E777-B7B3-4B36-8C6C-234AAD50D35F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3848E777-B7B3-4B36-8C6C-234AAD50D35F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3848E777-B7B3-4B36-8C6C-234AAD50D35F}.Release|Any CPU.ActiveCfg = Release|Any CPU

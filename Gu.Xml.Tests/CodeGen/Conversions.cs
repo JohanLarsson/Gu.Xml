@@ -10,7 +10,7 @@ namespace Gu.Xml.Tests.CodeGen
     public class Conversions
     {
         [Test]
-        public void ToString()
+        public  void ToStringConversion()
         {
             var toStrings = typeof(XmlConvert).GetMethods(BindingFlags.Public | BindingFlags.Static)
                                                .Where(m => m.Name == "ToString")

@@ -71,6 +71,7 @@
     <Compile Include="Dummies\MappedWithEnumerableAttributesClass.cs" />
     <Compile Include="Dummies\MappedWithEnumerableOfInterface.cs" />
     <Compile Include="Dummies\MappedWithExplicitXmlNames.cs" />
+    <Compile Include="Dummies\MappedWithInterfaceProperty.cs" />
     <Compile Include="Dummies\MappedWithNestedMapped.cs" />
     <Compile Include="Dummies\VanillaWithList.cs" />
     <Compile Include="Dummies\WithNullable.cs" />

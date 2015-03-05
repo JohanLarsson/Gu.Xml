@@ -53,12 +53,11 @@
 
         public XmlMap GetMap()
         {
-            return XmlMap.Create(
-                x => x.WithElement(() => Value1)
-                      .WithElement(() => Value2)
-                      .WithElement(() => Value3, () => _value3)
-                      .WithElement(() => Value4, () => _value4)
-                      .WithElement(() => Value5));
+            return new XmlMap().WithElement(() => Value1)
+                               .WithElement(() => Value2)
+                               .WithElement(() => Value3, () => _value3)
+                               .WithElement(() => Value4, () => _value4)
+                               .WithElement(() => Value5);
         }
     }
 }

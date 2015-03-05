@@ -23,12 +23,12 @@ Global
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = http://tfshub.sandvik.com:8080/tfs/defaultcollection
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = Gu.Xml.Tests\\Gu.Xml.Tests.csproj
-		SccProjectName1 = Gu.Xml.Tests
-		SccLocalPath1 = Gu.Xml.Tests
-		SccProjectUniqueName2 = Gu.Xml\\Gu.Xml.csproj
-		SccProjectName2 = Gu.Xml
-		SccLocalPath2 = Gu.Xml
+		SccProjectUniqueName1 = Gu.Xml\\Gu.Xml.csproj
+		SccProjectName1 = Gu.Xml
+		SccLocalPath1 = Gu.Xml
+		SccProjectUniqueName2 = Gu.Xml.Tests\\Gu.Xml.Tests.csproj
+		SccProjectName2 = Gu.Xml.Tests
+		SccLocalPath2 = Gu.Xml.Tests
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CreateNugetPackage|Any CPU = CreateNugetPackage|Any CPU

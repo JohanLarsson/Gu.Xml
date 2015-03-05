@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Runtime.Serialization;
@@ -138,6 +137,23 @@
             {
                 writer.WriteElementString(localName, XmlConvert.ToString((dynamic)value));
                 return writer;
+            }
+            if (typeof(T).IsInterface)
+            {
+                var serializable = value as IXmlSerializable;
+                if (serializable != null)
+                {
+                    writer.WriteStartElement(localName);
+                    writer.WriteStartElement(value.GetType().Name);
+                    serializable.WriteXml(writer);
+                    writer.WriteEndElement();
+                    writer.WriteEndElement();
+                    return writer;
+                }
+                else
+                {
+                    throw new NotImplementedException("Cannot write interface type that is not IXmlSerializable");
+                }
             }
             else
             {

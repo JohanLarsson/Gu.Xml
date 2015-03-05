@@ -1,35 +1,34 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Serialization;
-
-namespace Gu.Xml
+﻿namespace Gu.Xml
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
-    using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
     using System.Xml;
+    using System.Xml.Serialization;
+
     public static class XmlReaderExt
     {
         internal static readonly HashSet<Type> ReadElementContentAsTypes = new HashSet<Type>
         {
-            typeof (System.Boolean),
-            typeof (System.Nullable<System.Boolean>),
-            typeof (System.DateTime),
-            typeof (System.Nullable<System.DateTime>),
-            typeof (System.DateTimeOffset),
-            typeof (System.Nullable<System.DateTimeOffset>),
-            typeof (System.Double),
-            typeof (System.Nullable<System.Double>),
-            typeof (System.Single),
-            typeof (System.Nullable<System.Single>),
-            typeof (System.Decimal),
-            typeof (System.Nullable<System.Decimal>),
-            typeof (System.Int32),
-            typeof (System.Nullable<System.Int32>),
-            typeof (System.Int64),
-            typeof (System.Nullable<System.Int64>),
+            typeof (Boolean),
+            typeof (Nullable<Boolean>),
+            typeof (DateTime),
+            typeof (Nullable<DateTime>),
+            typeof (DateTimeOffset),
+            typeof (Nullable<DateTimeOffset>),
+            typeof (Double),
+            typeof (Nullable<Double>),
+            typeof (Single),
+            typeof (Nullable<Single>),
+            typeof (Decimal),
+            typeof (Nullable<Decimal>),
+            typeof (Int32),
+            typeof (Nullable<Int32>),
+            typeof (Int64),
+            typeof (Nullable<Int64>),
         };
 
         public static XmlReader ReadAttribute<T>(this XmlReader reader, Expression<Func<T>> property)
@@ -180,15 +179,40 @@ namespace Gu.Xml
                 VerifyNullable(value, localName, type);
                 return value;
             }
+            if (type.IsInterface)
+            {
+                if (typeof(IXmlSerializable).IsAssignableFrom(type))
+                {
+                    bool wrapped = false;
+                    var instanceType = type.Assembly.GetTypes()
+                                           .Where(x => !x.IsInterface)
+                                           .SingleOrDefault(x => x.Name == reader.LocalName);
+                    if (instanceType == null)
+                    {
+                        reader.ReadStartElement();
+                        instanceType = type.Assembly.GetTypes()
+                                               .Where(x => !x.IsInterface)
+                                               .SingleOrDefault(x => x.Name == reader.LocalName);
+                        wrapped = true;
+                    }
+
+                    // This is on the simple side for now ^
+                    var instance = (IXmlSerializable)Activator.CreateInstance(instanceType, true);
+                    instance.ReadXml(reader);
+                    if (wrapped)
+                    {
+                        reader.ReadEndElement();
+                    }
+                    return instance;
+                }
+                else
+                {
+                    throw new NotImplementedException("Cannot write interface type that is not IXmlSerializable");
+                }
+            }
             if (typeof(IXmlSerializable).IsAssignableFrom(type))
             {
                 var instanceType = type;
-                if (type.IsInterface)
-                {
-                    instanceType = type.Assembly.GetTypes()
-                                       .Single(x => x.Name == localName);
-                    // This is on the simple side for now
-                }
                 var instance = (IXmlSerializable)Activator.CreateInstance(instanceType, true);
                 instance.ReadXml(reader);
                 return instance;

@@ -10,6 +10,29 @@ namespace Gu.Xml.Tests
     public class RoundTrips
     {
         [Test]
+        public void MappedWithInterfaceProperty()
+        {
+            var first = new MappedSimpleClass { Value1 = 1, Value2 = 2 };
+            var second = new MappedSimpleClass { Value1 = 3, Value2 = 3 };
+            var instance = new MappedWithInterfaceProperty(first,second);
+            var roundtrip = instance.Roundtrip();
+            Assert.AreEqual(instance.First.Value1, roundtrip.First.Value1);
+            Assert.AreEqual(instance.First.Value2, roundtrip.First.Value2);
+
+            Assert.AreEqual(instance.MappedSimpleClass.Value1, roundtrip.MappedSimpleClass.Value1);
+            Assert.AreEqual(instance.MappedSimpleClass.Value2, roundtrip.MappedSimpleClass.Value2);
+        }
+
+        [Test]
+        public void MappedWithInterfacePropertyNulls()
+        {
+            var instance = new MappedWithInterfaceProperty(null, null);
+            var roundtrip = instance.Roundtrip();
+            Assert.AreEqual(instance.First, roundtrip.First);
+            Assert.AreEqual(instance.MappedSimpleClass, roundtrip.MappedSimpleClass);
+        }
+
+        [Test]
         public void WithNullableWithNulls()
         {
             var instance = new WithNullable { Value1 = null, Value2 = null };

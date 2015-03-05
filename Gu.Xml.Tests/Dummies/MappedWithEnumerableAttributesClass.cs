@@ -4,23 +4,23 @@
     using System.Xml;
     using System.Xml.Schema;
 
-    public class MappedWithEnumerable : IXmlMapped
+    public class MappedWithEnumerableAttributesClass : IXmlMapped
     {
-        internal readonly List<MappedSimpleClass> _items = new List<MappedSimpleClass>();
+        internal readonly List<AttributesClass> _items = new List<AttributesClass>();
 
-        private MappedWithEnumerable()
+        private MappedWithEnumerableAttributesClass()
         {
         }
 
-        public MappedWithEnumerable(int n)
+        public MappedWithEnumerableAttributesClass(int n)
         {
             for (int i = 0; i < n; i++)
             {
-                _items.Add(new MappedSimpleClass { Value1 = i, Value2 = 2 * i });
+                _items.Add(new AttributesClass(i % 2 == 0, i.ToString(), i, i * 2));
             }
         }
 
-        public IEnumerable<MappedSimpleClass> Items
+        public IEnumerable<AttributesClass> Items
         {
             get
             {

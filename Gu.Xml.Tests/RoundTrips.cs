@@ -184,15 +184,51 @@ namespace Gu.Xml.Tests
         }
 
         [Test]
-        public void MappedWithEnumerable()
+        public void MappedWithEnumerableEmptyList()
         {
-            var instance = new MappedWithEnumerable(2);
+            var instance = new MappedWithEnumerableOfMappedSimpleClass(0);
             var roundtrip = instance.Roundtrip();
             Assert.AreEqual(instance.Items.Count(), roundtrip.Items.Count());
             for (int i = 0; i < instance._items.Count; i++)
             {
                 Assert.AreEqual(instance._items[i].Value1, roundtrip._items[i].Value1);
                 Assert.AreEqual(instance._items[i].Value2, roundtrip._items[i].Value2);
+            }
+        }
+
+        [Test]
+        public void MappedWithEnumerableOfMappedSimpleClass()
+        {
+            var instance = new MappedWithEnumerableOfMappedSimpleClass(2);
+            var roundtrip = instance.Roundtrip();
+            Assert.AreEqual(instance.Items.Count(), roundtrip.Items.Count());
+            for (int i = 0; i < instance._items.Count; i++)
+            {
+                Assert.AreEqual(instance._items[i].Value1, roundtrip._items[i].Value1);
+                Assert.AreEqual(instance._items[i].Value2, roundtrip._items[i].Value2);
+            }
+        }
+
+        [Test]
+        public void MappedWithEnumerableOfInts()
+        {
+            var instance = new MappedWithEnumerableOfInts(2);
+            var roundtrip = instance.Roundtrip();
+            CollectionAssert.AreEqual(instance.Items, roundtrip.Items);
+        }
+
+        [Test]
+        public void MappedWithEnumerableAttributesClass()
+        {
+            var instance = new MappedWithEnumerableAttributesClass(2);
+            var roundtrip = instance.Roundtrip();
+            Assert.AreEqual(instance.Items.Count(), roundtrip.Items.Count());
+            for (int i = 0; i < instance._items.Count; i++)
+            {
+                Assert.AreEqual(instance._items[i].Value1, roundtrip._items[i].Value1);
+                Assert.AreEqual(instance._items[i].Value2, roundtrip._items[i].Value2);
+                Assert.AreEqual(instance._items[i].Value3, roundtrip._items[i].Value3);
+                Assert.AreEqual(instance._items[i].Value4, roundtrip._items[i].Value4);
             }
         }
 

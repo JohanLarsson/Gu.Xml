@@ -66,8 +66,9 @@
     <Compile Include="Dummies\AttributeClassWithMissingSetter.cs" />
     <Compile Include="Dummies\MappedInherited.cs" />
     <Compile Include="Dummies\MappedWithEnum.cs" />
-    <Compile Include="Dummies\MappedWithEnumerable.cs" />
+    <Compile Include="Dummies\MappedWithEnumerableOfMappedSimpleClass.cs" />
     <Compile Include="Dummies\ClassWithNestedSimpleClass.cs" />
+    <Compile Include="Dummies\MappedWithEnumerableAttributesClass.cs" />
     <Compile Include="Dummies\MappedWithEnumerableOfInterface.cs" />
     <Compile Include="Dummies\MappedWithExplicitXmlNames.cs" />
     <Compile Include="Dummies\MappedWithNestedMapped.cs" />

@@ -160,70 +160,64 @@ namespace Gu.Xml
                 }
                 return null;
             }
+            if (!reader.CanResolveEntity)
+            {
+                throw new SerializationException("!reader.CanResolveEntity");
+            }
+            if (type == typeof(string))
+            {
+                var value = reader.ReadElementContentAsString();
+                return value;
+            }
+            if (type.IsEnum)
+            {
+                var value = Enum.Parse(type, reader.ReadElementContentAsString());
+                return value;
+            }
+            if (ReadElementContentAsTypes.Contains(type))
+            {
+                var value = reader.ReadElementValueAs(type);
+                VerifyNullable(value, localName, type);
+                return value;
+            }
+            if (typeof(IXmlSerializable).IsAssignableFrom(type))
+            {
+                var instanceType = type;
+                if (type.IsInterface)
+                {
+                    instanceType = type.Assembly.GetTypes()
+                                       .Single(x => x.Name == localName);
+                    // This is on the simple side for now
+                }
+                var instance = (IXmlSerializable)Activator.CreateInstance(instanceType, true);
+                instance.ReadXml(reader);
+                return instance;
+            }
+            if (type.IsList())
+            {
+                var listElementType = type.ListElementType();
+                reader.ReadStartElement();
+                var values = (IList)Activator.CreateInstance(type);
+                while (reader.NodeType == XmlNodeType.Element)
+                {
+                    var item = reader.ReadElementAs(reader.Name, listElementType);
+                    values.Add(item);
+                }
+                if (!isEmptyElement)
+                {
+                    reader.ReadEndElement();
+                }
+                return values;
+            }
+            reader.ReadStartElement();
+            var serializer = new XmlSerializer(type);
+            var deserialized = serializer.Deserialize(reader);
             if (!isEmptyElement)
             {
-                if (reader.CanResolveEntity)
-                {
-                    if (type == typeof(string))
-                    {
-                        return reader.ReadElementContentAsString();
-                    }
-                    if (type.IsEnum)
-                    {
-                        return Enum.Parse(type, reader.ReadElementContentAsString());
-                    }
-                    if (ReadElementContentAsTypes.Contains(type))
-                    {
-                        var value = reader.ReadElementValueAs(type);
-                        VerifyNullable(value, localName, type);
-                        return value;
-                    }
-                    if (typeof(IXmlSerializable).IsAssignableFrom(type))
-                    {
-                        var instanceType = type;
-                        if (type.IsInterface)
-                        {
-                            instanceType = type.Assembly.GetTypes()
-                                               .Single(x => x.Name == localName);
-                            // This is on the simple side for now
-                        }
-                        var instance = (IXmlSerializable)Activator.CreateInstance(instanceType, true);
-                        instance.ReadXml(reader);
-                        return instance;
-                    }
-                    if (type.IsList())
-                    {
-                        var listElementType = type.ListElementType();
-                        reader.ReadStartElement();
-                        var values = (IList)Activator.CreateInstance(type);
-                        while (reader.NodeType == XmlNodeType.Element)
-                        {
-                            var item = reader.ReadElementAs(reader.Name, listElementType);
-                            values.Add(item);
-                        }
-
-                        reader.ReadEndElement();
-                        return values;
-                    }
-                    else
-                    {
-                        reader.ReadStartElement();
-                        var serializer = new XmlSerializer(type);
-                        var value = serializer.Deserialize(reader);
-                        reader.ReadEndElement();
-                        return value;
-                    }
-                }
-                else
-                {
-                    throw new SerializationException("!reader.CanResolveEntity");
-                }
+                reader.ReadEndElement();
             }
-            else
-            {
-                VerifyNullable(null, localName, type);
-            }
-            return null;
+            VerifyNullable(deserialized, localName, type);
+            return deserialized;
         }
 
         public static T ReadElementValueAs<T>(this XmlReader reader)

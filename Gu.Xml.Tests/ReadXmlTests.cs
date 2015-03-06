@@ -4,6 +4,8 @@
     using System.Runtime.Serialization;
 
     using Gu.Xml.Tests.Dummies;
+    using Gu.XmlTest;
+
     using NUnit.Framework;
 
     public class ReadXmlTests
@@ -12,8 +14,8 @@
         [Test]
         public void ReadMissingNullable()
         {
-            string xml = XmlHeader + @"<WithNullable/>";
-            var classWithNullable = xml.To<WithNullable>();
+            const string Xml = XmlHeader + @"<WithNullable/>";
+            var classWithNullable = Xml.To<WithNullable>();
             Assert.IsNull(classWithNullable.Value1);
             Assert.IsNull(classWithNullable.Value2);
         }
@@ -21,10 +23,10 @@
         [Test]
         public void ReadWithMissingMappingThrows()
         {
-            string xml = XmlHeader + @"<MappedSimpleClass><MissingMapping>Meh</MissingMapping></MappedSimpleClass>";
-            var exeption = Assert.Throws<InvalidOperationException>(() => { xml.To<MappedSimpleClass>(); });
-            exeption.DumpToConsole();
-            Assert.IsInstanceOf<SerializationException>(exeption.InnerException);
+            const string Xml = XmlHeader + @"<MappedSimpleClass><MissingMapping>Meh</MissingMapping></MappedSimpleClass>";
+            var exception = Assert.Throws<InvalidOperationException>(() => { Xml.To<MappedSimpleClass>(); });
+            exception.DumpToConsole();
+            Assert.IsInstanceOf<SerializationException>(exception.InnerException);
         }
 
         [Test]

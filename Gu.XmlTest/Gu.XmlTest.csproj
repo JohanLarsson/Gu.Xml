@@ -4,19 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3848E777-B7B3-4B36-8C6C-234AAD50D35F}</ProjectGuid>
+    <ProjectGuid>{9F31DCCF-9B87-425A-AA2F-CEF6CB9BA4A1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gu.Xml.Tests</RootNamespace>
-    <AssemblyName>Gu.Xml.Tests</AssemblyName>
+    <RootNamespace>Gu.XmlTest</RootNamespace>
+    <AssemblyName>Gu.XmlTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,7 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CreateNugetPackage|AnyCPU'">
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CreateNugetPackage|AnyCPU'">
     <OutputPath>bin\CreateNugetPackage\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
@@ -43,63 +39,33 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\CreateNugetPackage\Gu.XmlTest</DocumentationFile>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <BuildPackage>true</BuildPackage>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeGen\Conversions.cs" />
-    <Compile Include="CodeGen\ReadContentAsGen.cs" />
-    <Compile Include="Dummies\AttributesClass.cs" />
-    <Compile Include="Dummies\ElementClass.cs" />
-    <Compile Include="Dummies\IMappedSimpleClass.cs" />
-    <Compile Include="Dummies\MappedAttributesClass.cs" />
-    <Compile Include="Dummies\AttributeClassWithMissingSetter.cs" />
-    <Compile Include="Dummies\MappedInherited.cs" />
-    <Compile Include="Dummies\MappedWithEnum.cs" />
-    <Compile Include="Dummies\MappedWithEnumerableOfMappedSimpleClass.cs" />
-    <Compile Include="Dummies\ClassWithNestedSimpleClass.cs" />
-    <Compile Include="Dummies\MappedWithEnumerableAttributesClass.cs" />
-    <Compile Include="Dummies\MappedWithEnumerableOfInterface.cs" />
-    <Compile Include="Dummies\MappedWithExplicitXmlNames.cs" />
-    <Compile Include="Dummies\MappedWithInterfaceProperty.cs" />
-    <Compile Include="Dummies\MappedWithNestedMapped.cs" />
-    <Compile Include="Dummies\VanillaWithList.cs" />
-    <Compile Include="Dummies\WithNullable.cs" />
-    <Compile Include="Dummies\MappedElementClass.cs" />
-    <Compile Include="Dummies\DummyStruct.cs" />
-    <Compile Include="Dummies\ElementClassWithMissingSetter.cs" />
-    <Compile Include="Dummies\MappedWithNullable.cs" />
-    <Compile Include="Dummies\MissingAttribute.cs" />
-    <Compile Include="Dummies\MissingElement.cs" />
-    <Compile Include="Dummies\MappedClass.cs" />
-    <Compile Include="Dummies\SimpleClass.cs" />
-    <Compile Include="Dummies\MappedSimpleClass.cs" />
+    <Compile Include="AssertProperties.cs" />
+    <Compile Include="AssertSerialization.cs" />
+    <Compile Include="ExceptionExt.cs" />
+    <Compile Include="XmlExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReadXmlTests.cs" />
-    <Compile Include="RoundTrips.cs" />
-    <Compile Include="WriteXmlTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Gu.XmlTest\Gu.XmlTest.csproj">
-      <Project>{9F31DCCF-9B87-425A-AA2F-CEF6CB9BA4A1}</Project>
-      <Name>Gu.XmlTest</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Gu.Xml\Gu.Xml.csproj">
-      <Project>{e73e3548-105d-4d1a-aa1b-6c32f9935d9c}</Project>
-      <Name>Gu.Xml</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Sandbox\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

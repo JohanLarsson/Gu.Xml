@@ -7,6 +7,8 @@ namespace Gu.Xml.Tests
     using System.Collections.Generic;
     using System.Linq;
 
+    using Gu.XmlTest;
+
     public class RoundTrips
     {
         [Test]
@@ -101,7 +103,7 @@ namespace Gu.Xml.Tests
             CollectionAssert.AreEqual(instance.Value4, roundtrip.Value4);
         }
 
-        [Test]
+        [Test, Explicit("Dunno if this is relevant")]
         public void ListWithTwoMappedSimples()
         {
             var instance = new List<MappedSimpleClass>

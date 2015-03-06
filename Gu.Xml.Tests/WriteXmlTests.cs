@@ -4,6 +4,8 @@ using NUnit.Framework;
 
 namespace Gu.Xml.Tests
 {
+    using Gu.XmlTest;
+
     public class WriteXmlTests
     {
         [Test]

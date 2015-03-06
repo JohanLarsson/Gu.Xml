@@ -149,6 +149,11 @@
 
         public static object ReadElementAs(this XmlReader reader, string localName, Type type)
         {
+            return reader.ReadElementAs(localName, type, ReaderState.None);
+        }
+
+        private static object ReadElementAs(this XmlReader reader, string localName, Type type, ReaderState state)
+        {
             reader.MoveToContent();
             var isEmptyElement = reader.IsEmptyElement;
             if (reader.Name != localName)
@@ -183,23 +188,34 @@
             {
                 if (typeof(IXmlSerializable).IsAssignableFrom(type))
                 {
-                    bool wrapped = false;
-                    var instanceType = type.Assembly.GetTypes()
-                                           .Where(x => !x.IsInterface)
+                    Type instanceType;
+                    if (state == ReaderState.ReadingListItem)
+                    {
+                        instanceType = type.Assembly.GetTypes()
+                                           .Where(x => !x.IsInterface && !x.IsAbstract)
                                            .SingleOrDefault(x => x.Name == reader.LocalName);
-                    if (instanceType == null)
+                        // This is on the simple side for now ^
+                        if (instanceType == null)
+                        {
+                            throw new SerializationException(string.Format("Failed deserializing {0}", reader.Name));
+                        }
+                    }
+                    else
                     {
                         reader.ReadStartElement();
                         instanceType = type.Assembly.GetTypes()
-                                               .Where(x => !x.IsInterface)
-                                               .SingleOrDefault(x => x.Name == reader.LocalName);
-                        wrapped = true;
+                                           .Where(x => !x.IsInterface && !x.IsAbstract)
+                                           .SingleOrDefault(x => x.Name == reader.LocalName);
+                        // This is on the simple side for now ^
+                        if (instanceType == null)
+                        {
+                            throw new SerializationException(string.Format("Failed deserializing {0}", reader.Name));
+                        }
                     }
 
-                    // This is on the simple side for now ^
                     var instance = (IXmlSerializable)Activator.CreateInstance(instanceType, true);
                     instance.ReadXml(reader);
-                    if (wrapped)
+                    if (state != ReaderState.ReadingListItem)
                     {
                         reader.ReadEndElement();
                     }
@@ -224,7 +240,7 @@
                 var values = (IList)Activator.CreateInstance(type);
                 while (reader.NodeType == XmlNodeType.Element)
                 {
-                    var item = reader.ReadElementAs(reader.Name, listElementType);
+                    var item = reader.ReadElementAs(reader.Name, listElementType, ReaderState.ReadingListItem);
                     values.Add(item);
                 }
                 if (!isEmptyElement)

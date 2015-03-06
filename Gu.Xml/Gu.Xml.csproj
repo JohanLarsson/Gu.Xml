@@ -63,6 +63,7 @@
     <Compile Include="Map.cs" />
     <Compile Include="NameOf.cs" />
     <Compile Include="Property.cs" />
+    <Compile Include="ReaderState.cs" />
     <Compile Include="TypeExt.cs" />
     <Compile Include="XmlMap.cs" />
     <Compile Include="XmlReaderExt.cs" />

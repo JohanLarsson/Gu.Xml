@@ -11,6 +11,10 @@
             {
                 return true;
             }
+            if (type.IsInterface)
+            {
+                return true;
+            }
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
                 return true;
